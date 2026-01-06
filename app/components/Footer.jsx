@@ -1,5 +1,5 @@
+"use client";
 import React from "react";
-
 const Footer = () => {
   return (
     <footer className="w-full h-[280px]  flex items-center justify-center bg-bg-indigo">
