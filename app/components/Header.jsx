@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 
 const Header = () => {
-  const genres = [
+  const genresArr = [
     "Action",
     "Adventure",
     "Animation",
@@ -73,12 +73,11 @@ const Header = () => {
           type="search"
           placeholder="⌕ Search"
           className="w-[380px] h-[36px] border border-border-gray rounded-sm p-2"
-          onFocus={() => setOpen(true)}
         />
 
         {open && (
           <Modal
-            genres={genres}
+            genres={genresArr}
             onSelect={(item) => {
               setSelectedGenre(item);
               setOpen(false);
