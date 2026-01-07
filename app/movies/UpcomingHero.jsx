@@ -1,57 +1,73 @@
+"use client";
+
 import React from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
   CarouselNext,
-} from "@/components/ui/carousel";
-const UpcomingHero = () => {
-  return <carousel />;
-};
+  CarouselPrevious,
+} from "../../components/ui/carousel";
 
-export default UpcomingHero;
+const slides = [
+  {
+    title: "Wicked",
+    rating: "8.2",
+    desc: "Elphaba and Glinda become friends… until Oz politics hits different.",
+    img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80",
+  },
+  {
+    title: "Dune: Part Two",
+    rating: "8.6",
+    desc: "Paul goes full prophecy mode in the sandiest group project ever.",
+    img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80",
+  },
+];
 
-//   <div className="relative w-full h-[60vh] overflow-hidden rounded-xl">
-//     <img
-//       src="https://img.freepik.com/premium-photo/serene-landscape-with-mountains-blooming-flowers_1148129-52514.jpg?semt=ais_hybrid&w=740&q=80"
-//       alt=""
-//       className="absolute inset-0 w-full h-full object-cover"
-//     />
+export default function UpcomingHero() {
+  return (
+    <div className="w-full h-[60vh] relative overflow-hidden rounded-xl">
+      <Carousel className="w-full h-full">
+        <CarouselContent className="h-full">
+          {slides.map((s, idx) => (
+            <CarouselItem key={idx} className="h-full">
+              <div className="relative h-[60vh] w-full overflow-hidden flex flex-col items-start justify-center">
+                {/* bg */}
+                <img
+                  src={s.img}
+                  alt={s.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {/* overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10" />
 
-//     <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10" />
+                {/* content */}
+                <div className="relative z-10 w-[404px] h-[264px] flex flex-col justify-center pl-[140px] px-6 md:px-10 ml-[140px]">
+                  <div className="max-w-[420px] text-white">
+                    <p className="text-white/80 text-sm text-lg">
+                      Now Playing:
+                    </p>
+                    <h1 className="text-4xl font-semibold leading-tight">
+                      {s.title}
+                    </h1>
+                    <p className="text-white/90 mt-3">⭐ {s.rating} / 10</p>
+                    <p className="text-sm text-white/75 leading-relaxed line-clamp-4">
+                      {s.desc}
+                    </p>
+                    <button className="w-[145px] h-[40px] bg-bg-gray text-black p-2 text-[14px] rounded-lg ">
+                      Watch Trailer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
 
-//     <div className="relative z-10 h-full flex items-center">
-//       <section className="w-full max-w-[420px] px-6 md:px-10">
-//         <aside className="flex flex-col gap-3">
-//           <p className="text-white/80 text-sm">Now Playing:</p>
-
-//           <h1 className="text-white text-4xl font-semibold leading-tight">
-//             Movie Title here
-//           </h1>
-
-//           <p className="text-white/90">⭐ Rating here</p>
-
-//           <p className="text-white/75 text-sm leading-relaxed line-clamp-4">
-//             Elphaba, a misunderstood young woman because of her green skin,
-//             and Glinda, a popular girl, become friends at Shiz University in
-//             the Land of Oz. After an encounter with the Wonderful Wizard of
-//             Oz, their friendship reaches a crossroads
-//           </p>
-
-//           <button className="w-fit px-4 py-2 border rounded-lg bg-bg-gray text-balck hover:border-black transition">
-//             Watch Trailer
-//           </button>
-//         </aside>
-//       </section>
-//     </div>
-
-//     {/* Arrow */}
-//     <button
-//       className="absolute right-6 top-1/2 -translate-y-1/2 z-20
-//                  w-10 h-10 rounded-full bg-white/90 hover:bg-white transition
-//                  flex items-center justify-center"
-//     >
-//       ➡
-//     </button>
-//   </div>
+        {/* arrows */}
+        <CarouselPrevious className="left-4" />
+        <CarouselNext className="right-4" />
+      </Carousel>
+    </div>
+  );
+}
