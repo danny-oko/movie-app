@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+config.autoAddCss = false;
+
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>{children}</body>

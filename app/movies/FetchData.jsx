@@ -76,7 +76,6 @@ const FetchData = (presets) => {
       <p>{Title}</p>
       <p>⭐{imdbRating}</p>
       <p>{Plot}</p>
-      {/* <p>{Title}</p> */}
     </div>
   );
 };
