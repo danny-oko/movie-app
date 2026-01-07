@@ -13,7 +13,7 @@ const slides = [
   {
     title: "Wicked",
     rating: "8.2",
-    desc: "Elphaba and Glinda become friends… until Oz politics hits different.",
+    desc: "Elphaba, a misunderstood young woman because of her green skin, and Glinda, a popular girl, become friends at Shiz University in the Land of Oz. After an encounter with the Wonderful Wizard of Oz, their friendship reaches a crossroads. ",
     img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80",
   },
   {
@@ -26,7 +26,7 @@ const slides = [
 
 export default function UpcomingHero() {
   return (
-    <div className="w-full h-[60vh] relative overflow-hidden rounded-xl">
+    <div className="w-full h-[60vh] relative overflow-hidden rounded-lg">
       <Carousel className="w-full h-full">
         <CarouselContent className="h-full">
           {slides.map((s, idx) => (
@@ -50,11 +50,11 @@ export default function UpcomingHero() {
                     <h1 className="text-4xl font-semibold leading-tight">
                       {s.title}
                     </h1>
-                    <p className="text-white/90 mt-3">⭐ {s.rating} / 10</p>
-                    <p className="text-sm text-white/75 leading-relaxed line-clamp-4">
+                    <p className="text-white/90 mt-2">⭐ {s.rating} / 10</p>
+                    <p className="text-sm text-white/75 leading-relaxed line-clamp-4 mt-4">
                       {s.desc}
                     </p>
-                    <button className="w-[145px] h-[40px] bg-bg-gray text-black p-2 text-[14px] rounded-lg ">
+                    <button className="w-[145px] h-[40px] bg-bg-gray text-black p-2 text-[14px] rounded-lg mt-4">
                       Watch Trailer
                     </button>
                   </div>
