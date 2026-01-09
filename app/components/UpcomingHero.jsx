@@ -1,6 +1,6 @@
 "use client";
-
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Carousel,
   CarouselContent,
@@ -9,64 +9,87 @@ import {
   CarouselPrevious,
 } from "../../components/ui/carousel";
 
-const slides = [
-  {
-    title: "Wicked",
-    rating: "8.2",
-    desc: "Elphaba, a misunderstood young woman because of her green skin, and Glinda, a popular girl, become friends at Shiz University in the Land of Oz. After an encounter with the Wonderful Wizard of Oz, their friendship reaches a crossroads. ",
-    img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80",
-  },
-  {
-    title: "Dune: Part Two",
-    rating: "8.6",
-    desc: "Paul goes full prophecy mode in the sandiest group project ever.",
-    img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=80",
-  },
-];
+const imageUrl = "https://image.tmdb.org/t/p/original";
 
 export default function UpcomingHero() {
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      try {
+        const res = await axios.get("/api/tmdb/nowPlaying");
+        if (!alive) return;
+        console.log("hero section data:", res.data);
+        setMovies(res.data?.results ?? []);
+      } catch {
+        if (!alive) return;
+        setError("Internal Server Error");
+        setMovies([]);
+      } finally {
+        if (alive) setIsLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div className="w-full h-[60vh] relative overflow-hidden rounded-lg">
-      <Carousel className="w-full h-full">
-        <CarouselContent className="h-full">
-          {slides.map((s, idx) => (
-            <CarouselItem key={idx} className="h-full">
-              <div className="relative h-[60vh] w-full overflow-hidden flex flex-col items-start justify-center">
-                {/* bg */}
+      <Carousel>
+        <CarouselContent>
+          {movies.slice(0, 10).map((m) => (
+            <CarouselItem key={m.id}>
+              <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
+                {/* Background image */}
                 <img
-                  src={s.img}
-                  alt={s.title}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  src={`${imageUrl}${m.backdrop_path}`}
+                  alt={m.title}
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
-                {/* overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10" />
 
-                {/* content */}
-                <div className="relative z-10 w-[404px] h-[264px] flex flex-col justify-center pl-[140px] px-6 md:px-10 ml-[140px]">
-                  <div className="max-w-[420px] text-white">
-                    <p className="text-white/80 text-sm text-lg">
-                      Now Playing:
-                    </p>
-                    <h1 className="text-4xl font-semibold leading-tight">
-                      {s.title}
-                    </h1>
-                    <p className="text-white/90 mt-2">⭐ {s.rating} / 10</p>
-                    <p className="text-sm text-white/75 leading-relaxed line-clamp-4 mt-4">
-                      {s.desc}
-                    </p>
-                    <button className="w-[145px] h-[40px] bg-bg-gray text-black p-2 text-[14px] rounded-lg mt-4">
-                      Watch Trailer
-                    </button>
+                {/* Dark fade overlay (left heavy) */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+
+                {/* Content */}
+                <div className="ml-[140px] absolute left-10 top-1/2 z-10 w-[520px] -translate-y-1/2 text-white">
+                  <p className="text-sm opacity-80">Now Playing:</p>
+
+                  <h2 className="mt-2 text-4xl font-bold leading-tight">
+                    {m.title}
+                  </h2>
+
+                  <div className="mt-3 flex items-center gap-2 text-sm opacity-90">
+                    <span className="text-yellow-400">★</span>
+                    <span className="font-medium">
+                      {m.vote_average?.toFixed(1)}
+                    </span>
+                    <span className="opacity-60">/ 10</span>
                   </div>
+
+                  <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-white/80">
+                    {m.overview}
+                  </p>
+
+                  <button className="mt-6 inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur hover:bg-white/15">
+                    <span className="text-lg">▶</span>
+                    Watch Trailer
+                  </button>
                 </div>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        {/* arrows */}
-        <CarouselPrevious className="left-4" />
-        <CarouselNext className="right-4" />
+        <CarouselPrevious />
+        <CarouselNext />
       </Carousel>
     </div>
   );

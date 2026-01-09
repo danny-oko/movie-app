@@ -18,7 +18,7 @@ const page = () => {
 
   axios
     .request(options)
-    .then((res) => console.log(res.data))
+    // .then((res) => console.log(res.data))
     .catch((err) => console.error(err));
   return (
     <>
