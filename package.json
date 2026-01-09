@@ -19,6 +19,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
+    "curl": "^0.1.4",
+    "dotenv": "^17.2.3",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
