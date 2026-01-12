@@ -1,15 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import Header from "@/app/components/Header"
 const Page = () => {
   const [movies, setMovies] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
-  const seeMore = () => {
-    router.push("/pages/upcoming");
+  const handleBack = () => {
+    router.push("/");
   };
 
   useEffect(() => {
@@ -46,10 +47,10 @@ const Page = () => {
         <div className="flex items-center justify-between px-10">
           <h3 className="font-semibold text-2xl">Upcoming</h3>
           <button
-            onClick={seeMore()}
+            onClick={handleBack}
             className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center"
           >
-            See more ➝
+            Back ←
           </button>
         </div>
 
@@ -57,7 +58,7 @@ const Page = () => {
         {!isLoading && !error && (
           <div className="mt-4">
             <div className="grid grid-cols-5 gap-6 px-10 py-8">
-              {movies.slice(0, 10).map((m) => (
+              {movies.map((m) => (
                 <div
                   key={m.id}
                   className="rounded-xl overflow-hidden bg-white shadow-sm"

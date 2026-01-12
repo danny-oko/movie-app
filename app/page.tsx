@@ -5,6 +5,7 @@ import Footer from "@/app/components/Footer";
 import UpcomingHero from "@/app/components/UpcomingHero";
 import Upcoming from "@/app/movies/upcoming/page";
 import Popular from "@/app/movies/popular/page";
+import Top from "@/app/movies/top-rated/page";
 import axios from "axios";
 
 const page = () => {
@@ -20,7 +21,7 @@ const page = () => {
 
   axios
     .request(options)
-    .then((res) => console.log(res.data))
+    // .then((res) => console.log(res.data))
     .catch((err) => console.error(err));
   return (
     <>
@@ -28,6 +29,7 @@ const page = () => {
       <UpcomingHero />
       <Upcoming />
       <Popular />
+      <Top />
       <Footer />
     </>
   );

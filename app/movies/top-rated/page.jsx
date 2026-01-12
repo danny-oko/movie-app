@@ -1,34 +1,37 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+
 const Page = () => {
-  const [movies, setMovies] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const router = useRouter();
-  const seeMore = () => {
-    router.push("/pages/upcoming");
-  };
+  const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     let alive = true;
+
     const run = async () => {
       try {
-        const res = await axios.get("/api/tmdb/upcoming");
+        setError(null);
+        setIsLoading(true);
+
+        const res = await axios.get("/api/tmdb/top-rated");
+
         if (!alive) return;
 
+        // console.log("TMDB response:", res.data);
         setMovies(res.data?.results ?? []);
-        console.log(res.data);
-      } catch (error) {
+      } catch (e) {
         if (!alive) return;
-        setError("internal server error");
+        console.error(e);
+        setError("Failed to fetch data from TMDB");
+        setMovies([]);
       } finally {
         if (!alive) return;
         setIsLoading(false);
       }
     };
+
     run();
     return () => {
       alive = false;
@@ -42,13 +45,10 @@ const Page = () => {
       {isLoading && <p>loading...</p>}
       {error && <p>{error}</p>}
       <div className="w-4/5 mt-8">
-        {/* Header row */}
         <div className="flex items-center justify-between px-10">
-          <h3 className="font-semibold text-2xl">Upcoming</h3>
-          <button
-            onClick={seeMore()}
-            className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center"
-          >
+          <h3 className="font-semibold text-2xl">Top Rated</h3>
+
+          <button className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center">
             See more ➝
           </button>
         </div>
@@ -65,7 +65,7 @@ const Page = () => {
                   <img
                     src={`${imageUrl}${m.poster_path}`}
                     alt={m.original_title}
-                    className="w-full h-[320px] object-cover"
+                    className="w-full h-[420px] object-cover"
                   />
 
                   <div className="p-4 bg-gray-50">

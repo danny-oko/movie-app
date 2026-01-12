@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+
 const Footer = () => {
   return (
     <footer className="w-full h-[280px]  flex items-center justify-center bg-bg-indigo">
@@ -17,20 +18,20 @@ const Footer = () => {
           <p>Contact Information</p>
           <div className="flex flex-col font-regular">
             <p>Email: </p>
-            <p>support@movieZ.com</p>
+            <p>danny.otgontsetseg@gmail.com</p>
             <p>Phone:</p>
-            <p>+976 (11) 123-4567</p>
+            <p>+967 80296007</p>
           </div>
         </section>
 
         {/* Social accounts */}
         <section className="w-1/4 flex text-text-white font-regular flex flex-col gap-2">
           <div className="w-full">
-            <p>Follow us</p>
+            <p>Follow Me:</p>
           </div>
           <div className="w-full flex justify-between">
-            <a>FaceBook</a>
-            <a>Instagram</a>
+            <a href="https://www.facebook.com/dnii.dnii.0412">FaceBook</a>
+            <a href="https://www.instagram.com/dnii_d/">Instagram</a>
             <a>Twitter</a>
             <a>Youtube</a>
           </div>
