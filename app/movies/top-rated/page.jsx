@@ -1,11 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [movies, setMovies] = useState([]);
+
+  const router = useRouter();
+  const seeMore = () => {
+    router.push("/pages/top-rated");
+  };
 
   useEffect(() => {
     let alive = true;
@@ -48,7 +54,10 @@ const Page = () => {
         <div className="flex items-center justify-between px-10">
           <h3 className="font-semibold text-2xl">Top Rated</h3>
 
-          <button className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center">
+          <button
+            onClick={seeMore}
+            className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center cursor-pointer cursor-pointer"
+          >
             See more ➝
           </button>
         </div>

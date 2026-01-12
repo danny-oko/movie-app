@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+
 const Page = () => {
   const [movies, setMovies] = useState(null);
   const [error, setError] = useState(null);
@@ -46,8 +47,8 @@ const Page = () => {
         <div className="flex items-center justify-between px-10">
           <h3 className="font-semibold text-2xl">Upcoming</h3>
           <button
-            onClick={seeMore()}
-            className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center"
+            onClick={seeMore}
+            className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center cursor-pointer"
           >
             See more ➝
           </button>
