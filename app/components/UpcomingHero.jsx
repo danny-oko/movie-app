@@ -15,16 +15,79 @@ export default function UpcomingHero() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Trailer modal states
+  const [open, setOpen] = useState(false);
+  const [embedUrl, setEmbedUrl] = useState(null);
+  const [trailerLoading, setTrailerLoading] = useState(false);
+
+  const closeModal = () => {
+    setOpen(false);
+    setEmbedUrl(null);
+    setTrailerLoading(false);
+  };
+
+  // ESC close + body scroll lock
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") closeModal();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Fetch trailer for a specific movie and open modal
+  const openTrailer = async (movieId) => {
+    try {
+      setTrailerLoading(true);
+      setOpen(true);
+      setEmbedUrl(null);
+
+      const res = await axios.get(`/api/tmdb/movie/${movieId}/videos`);
+      const videos = res.data?.results ?? [];
+
+      const trailer =
+        videos.find((v) => v.site === "YouTube" && v.type === "Trailer") ||
+        videos.find((v) => v.site === "YouTube" && v.type === "Teaser") ||
+        videos.find((v) => v.site === "YouTube");
+
+      if (!trailer?.key) {
+        setEmbedUrl(null);
+        return;
+      }
+
+      setEmbedUrl(
+        `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`
+      );
+    } catch (err) {
+      setEmbedUrl(null);
+    } finally {
+      setTrailerLoading(false);
+    }
+  };
+
+  // Fetch now playing movies
   useEffect(() => {
     let alive = true;
 
     (async () => {
       try {
+        setIsLoading(true);
+        setError(null);
+
         const res = await axios.get("/api/tmdb/nowPlaying");
         if (!alive) return;
-        console.log("hero section data:", res.data);
+        console.log("tmdb data for hero section:", res.data);
         setMovies(res.data?.results ?? []);
-      } catch {
+      } catch (e) {
         if (!alive) return;
         setError("Internal Server Error");
         setMovies([]);
@@ -55,7 +118,7 @@ export default function UpcomingHero() {
                   className="absolute inset-0 h-full w-full object-cover"
                 />
 
-                {/* Dark fade overlay (left heavy) */}
+                {/* Dark fade overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
 
                 {/* Content */}
@@ -78,7 +141,11 @@ export default function UpcomingHero() {
                     {m.overview}
                   </p>
 
-                  <button className="mt-6 inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur hover:bg-white/15">
+                  <button
+                    onClick={() => openTrailer(m.id)}
+                    className="mt-6 inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur hover:bg-white/15"
+                    type="button"
+                  >
                     <span className="text-lg">▶</span>
                     Watch Trailer
                   </button>
@@ -91,6 +158,50 @@ export default function UpcomingHero() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+
+      {/* ===== Trailer Modal ===== */}
+      {open && (
+        <div
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 p-4"
+          onMouseDown={closeModal}
+        >
+          <div
+            className="w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden relative"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-black rounded-full w-9 h-9 flex items-center justify-center"
+              aria-label="Close"
+              type="button"
+            >
+              ✕
+            </button>
+
+            {trailerLoading && (
+              <div className="absolute inset-0 flex items-center justify-center text-white">
+                Loading trailer...
+              </div>
+            )}
+
+            {!trailerLoading && !embedUrl && (
+              <div className="absolute inset-0 flex items-center justify-center text-white text-center px-6">
+                Trailer not available for this movie 😭
+              </div>
+            )}
+
+            {!trailerLoading && embedUrl && (
+              <iframe
+                className="w-full h-full"
+                src={embedUrl}
+                title="YouTube trailer"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
