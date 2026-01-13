@@ -6,7 +6,7 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 export async function GET(req, { params }) {
   try {
     const { id } = params;
-    const token = process.env.TMDB_V4_TOKEN; // <- store your v4 token here
+    const token = process.env.TMDB_TOKEN;
 
     if (!token) {
       return NextResponse.json(
