@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -8,6 +9,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../../components/ui/carousel";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const imageUrl = "https://image.tmdb.org/t/p/original";
 
@@ -16,10 +27,7 @@ export default function UpcomingHero() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Trailer modal states
   const [open, setOpen] = useState(false);
-  const [embedUrl, setEmbedUrl] = useState(null);
-  const [trailerLoading, setTrailerLoading] = useState(false);
 
   const closeModal = () => {
     setOpen(false);
@@ -27,7 +35,6 @@ export default function UpcomingHero() {
     setTrailerLoading(false);
   };
 
-  // ESC close + body scroll lock
   useEffect(() => {
     if (!open) return;
 
@@ -43,36 +50,6 @@ export default function UpcomingHero() {
       document.body.style.overflow = "";
     };
   }, [open]);
-
-  // Fetch trailer for a specific movie and open modal
-  const openTrailer = async (movieId) => {
-    try {
-      setTrailerLoading(true);
-      setOpen(true);
-      setEmbedUrl(null);
-
-      const res = await axios.get(`/api/tmdb/movie/${movieId}/videos`);
-      const videos = res.data?.results ?? [];
-
-      const trailer =
-        videos.find((v) => v.site === "YouTube" && v.type === "Trailer") ||
-        videos.find((v) => v.site === "YouTube" && v.type === "Teaser") ||
-        videos.find((v) => v.site === "YouTube");
-
-      if (!trailer?.key) {
-        setEmbedUrl(null);
-        return;
-      }
-
-      setEmbedUrl(
-        `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`
-      );
-    } catch (err) {
-      setEmbedUrl(null);
-    } finally {
-      setTrailerLoading(false);
-    }
-  };
 
   // Fetch now playing movies
   useEffect(() => {
@@ -141,13 +118,20 @@ export default function UpcomingHero() {
                     {m.overview}
                   </p>
 
-                  <button
-                    onClick={() => openTrailer(m.id)}
-                    className="mt-6 inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur hover:bg-white/15"
-                    type="button"
-                  >
-                    <span className="text-lg">▶</span>
-                    Watch Trailer
+                  <button>
+                    <Dialog>
+                      <DialogTrigger>Open</DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Are you absolutely sure?</DialogTitle>
+                          <DialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account and remove your data from our
+                            servers.
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
                   </button>
                 </div>
               </div>
@@ -159,7 +143,7 @@ export default function UpcomingHero() {
         <CarouselNext />
       </Carousel>
 
-      {/* ===== Trailer Modal ===== */}
+      {/* trailer modal */}
       {open && (
         <div
           className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 p-4"

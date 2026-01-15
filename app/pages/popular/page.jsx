@@ -2,20 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
+import MovieGridPages from "../../../components/ui/MovieGridPages";
+import { Button } from "@/components/ui/button";
+
 const Page = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [movies, setMovies] = useState([]);
-
-  const router = useRouter();
-  const handleBack = () => {
-    router.push("/");
-  };
+  const [movieList, setMovieList] = useState([]);
 
   useEffect(() => {
     let alive = true;
@@ -30,12 +29,12 @@ const Page = () => {
         if (!alive) return;
 
         // console.log("TMDB response:", res.data);
-        setMovies(res.data?.results ?? []);
+        setMovieList(res.data?.results ?? []);
       } catch (e) {
         if (!alive) return;
         console.error(e);
         setError("Failed to fetch data from TMDB");
-        setMovies([]);
+        setMovieList([]);
       } finally {
         if (!alive) return;
         setIsLoading(false);
@@ -48,57 +47,19 @@ const Page = () => {
     };
   }, []);
 
-  const imageUrl = "https://image.tmdb.org/t/p/original";
-
   return (
     <>
       <Header />
-
-      <div className="flex flex-col items-center justify-center">
-        {isLoading && <p>loading...</p>}
-        {error && <p>{error}</p>}
-        <div className="w-4/5 mt-8">
-          {/* Header row */}
-          <div className="flex items-center justify-between px-10">
-            <h3 className="font-semibold text-2xl">Popular</h3>
-            <button
-              onClick={handleBack}
-              className="w-[120px] h-[36px] flex flex-col items-center justify-center align-center cursor-pointer"
-            >
-              ← Back
-            </button>
-          </div>
-
-          {/* Grid */}
-          {!isLoading && !error && (
-            <div className="mt-4">
-              <div className="grid grid-cols-5 gap-6 px-10 py-8">
-                {movies.map((m) => (
-                  <div
-                    key={m.id}
-                    className="rounded-xl overflow-hidden bg-white shadow-sm"
-                  >
-                    <img
-                      src={`${imageUrl}${m.poster_path}`}
-                      alt={m.original_title}
-                      className="w-full h-[420px] object-cover"
-                    />
-
-                    <div className="p-4 bg-gray-50">
-                      <p className="text-sm text-gray-600">
-                        ⭐ {m.vote_average.toFixed(1)}
-                        <span className="text-xs text-gray-500">/10</span>
-                      </p>
-                      <h1 className="mt-1 text-sm font-semibold text-gray-900 line-clamp-2">
-                        {m.title}
-                      </h1>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="upcoming flex flex-col gap-8 p-26">
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{Error}</p>}
+        <aside className="titles w-full h-12 flex items-center justify-between">
+          <h3 className="font-semibold text-2xl">Popular</h3>
+          <Button variant="seeMore">
+            <Link href={"/"}>← Back to Menu</Link>
+          </Button>
+        </aside>
+        <MovieGridPages movies={movieList} />
       </div>
       <Footer />
     </>

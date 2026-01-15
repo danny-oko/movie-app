@@ -17,6 +17,6 @@ export async function GET() {
     const status = err?.response?.status || 500;
     const message =
       err?.response?.data?.error_message || error?.message || "Server Error";
-    return NextResponse({ satus }, { message });
+    return NextResponse({ status }, { message });
   }
 }
