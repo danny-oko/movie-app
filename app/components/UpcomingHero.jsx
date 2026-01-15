@@ -119,7 +119,7 @@ export default function UpcomingHero() {
                   </p>
 
                   <button>
-                    <Dialog>
+                    {/* <Dialog>
                       <DialogTrigger>Open</DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -131,7 +131,8 @@ export default function UpcomingHero() {
                           </DialogDescription>
                         </DialogHeader>
                       </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
+                   watch trailer
                   </button>
                 </div>
               </div>

@@ -1,12 +1,14 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 
 const MovieCard = ({ movie }) => {
   const imgBaseUrl = "https://image.tmdb.org/t/p/original";
   const poster = `${imgBaseUrl}${movie.poster_path}`;
   const title = movie.title || "Untitled";
+
   return (
-    <a href={movie.id} className="bg-bg-gray rounded-xl ">
+    <Link href={`/pages/${movie.id}`} className="bg-bg-gray rounded-xl ">
       <figure className="overflow-hidden">
         <img src={poster} alt={title} className="rounded-t-xl" />
       </figure>
@@ -16,7 +18,7 @@ const MovieCard = ({ movie }) => {
         </p>
         <p>{title}</p>
       </div>
-    </a>
+    </Link>
   );
 };
 
