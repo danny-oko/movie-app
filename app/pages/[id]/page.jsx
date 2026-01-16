@@ -1,30 +1,38 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Credits from "../../../components/ui/Credits";
+import { useParams } from "next/navigation";
 import axios from "axios";
 
 export default function Page() {
-  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
 
   useEffect(() => {
+    let alive = true;
     const run = async () => {
       try {
+        setError(null);
+
         const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
-        console.log("API DATA:", res.data);
+
+        if (!alive) return;
+
         setData(res.data);
-      } catch (e) {
-        console.error("API ERROR:", e);
+        console.log("movie details:", res.data);
+      } catch (err) {
+        if (!alive) return;
+
+        setError(err);
+        setData([]);
+      } finally {
+        setLoading(false);
       }
     };
-
     run();
   }, []);
 
-  return (
-    <div className="p-6">
-      <h1>API test</h1>
-      <pre className="mt-4 text-xs bg-black/10 p-4 rounded-xl overflow-auto">
-        {JSON.stringify(data, null, 2)}
-      </pre>
-    </div>
-  );
+  const { id } = useParams();
+  return <Credits id={id} />;
 }

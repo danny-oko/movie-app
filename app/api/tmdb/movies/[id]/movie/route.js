@@ -20,7 +20,7 @@ export async function GET(req, { params }) {
         Authorization: `Bearer ${token}`,
       },
     });
-    return NextResponse.json(res, { status: 200 });
+    return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status || 500;
     const message =
