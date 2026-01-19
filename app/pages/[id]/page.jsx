@@ -1,38 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Credits from "../../../components/ui/Credits";
-import { useParams } from "next/navigation";
 import axios from "axios";
+import { useParams, useSearchParams } from "next/navigation";
+import Credits from "../../../components/ui/Credits";
 
-export default function Page() {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
+export default async function Page({ params }) {
+  
 
-  useEffect(() => {
-    let alive = true;
-    const run = async () => {
-      try {
-        setError(null);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [movData, setMovData] = useState(null);
 
-        const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
+  // if (loading) return <div className="container">Loading...</div>;
+  // if (error) return <div className="container">Error: {error}</div>;
 
-        if (!alive) return;
-
-        setData(res.data);
-        console.log("movie details:", res.data);
-      } catch (err) {
-        if (!alive) return;
-
-        setError(err);
-        setData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    run();
-  }, []);
-
-  const { id } = useParams();
-  return <Credits id={id} />;
+  return (
+    <div className="container">
+      <Credits id={params.id} />
+    </div>
+  );
 }

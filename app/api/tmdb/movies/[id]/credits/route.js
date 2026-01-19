@@ -1,29 +1,33 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(request, { params }) {
+export async function GET(_request, { params }) {
   try {
-    const { id } = params;
+    const { id } = (await params) || {};
+
+    if (!id)
+      return NextResponse.json(
+        { message: "Missing Movie id" },
+        { status: 400 },
+      );
 
     const token = process.env.TMDB_TOKEN;
-    const baseUrl = process.env.TMDB_BASE_URL;
+    const baseUrl = (process.env.TMDB_BASE_URL || "").replace(/\/$/, "");
 
     if (!token || !baseUrl) {
       return NextResponse.json(
         { error: "Missing environment variables" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    const url = `${baseUrl}/movie/${id}/credits?language=en-US`;
-
+    const url = `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`;
     const res = await axios.get(url, {
       headers: {
         accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const message =

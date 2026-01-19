@@ -8,7 +8,10 @@ const MovieCard = ({ movie }) => {
   const title = movie.title || "Untitled";
 
   return (
-    <Link href={`/pages/${movie.id}`} className="bg-bg-gray rounded-xl ">
+    <Link
+      href={`/pages/movie?movie-id=${movie.id}`}
+      className="bg-bg-gray rounded-xl "
+    >
       <figure className="overflow-hidden">
         <img src={poster} alt={title} className="rounded-t-xl" />
       </figure>
