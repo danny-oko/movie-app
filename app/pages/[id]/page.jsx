@@ -4,35 +4,28 @@ import Credits from "../../../components/ui/Credits";
 import { useParams } from "next/navigation";
 import axios from "axios";
 
-export default function Page() {
+export default function Page({ params }) {
+  const { id } = useParams();
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
-
+  const [casts, setCasts] = useState([]);
   useEffect(() => {
-    let alive = true;
     const run = async () => {
       try {
-        setError(null);
-
         const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
-
-        if (!alive) return;
-
+        console.log("res data:", res.data);
         setData(res.data);
-        console.log("movie details:", res.data);
+        // setCasts(res.data.cast);
+        // console.log(res.data.cast);
       } catch (err) {
-        if (!alive) return;
-
-        setError(err);
-        setData([]);
-      } finally {
-        setLoading(false);
+        setError("failed:", err);
       }
     };
     run();
-  }, []);
-
-  const { id } = useParams();
-  return <Credits id={id} />;
+  }, [id]);
+  return (
+    <div>
+      <Credits id={id} />
+    </div>
+  );
 }

@@ -1,7 +1,8 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 
-const Credits = ({ id }) => {
-  return <div>Movie id: {id}</div>;
+const Credits = ({ id, movie = {} }) => {
+  return <div>{id}</div>;
 };
 
 export default Credits;
