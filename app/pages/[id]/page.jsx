@@ -1,31 +1,42 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Credits from "../../../components/ui/Credits";
+import MovieDetails from "../../../components/ui/MovieDetails";
 import { useParams } from "next/navigation";
 import axios from "axios";
 
-export default function Page({ params }) {
+export default function Page() {
   const { id } = useParams();
+
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  const [casts, setCasts] = useState([]);
+
   useEffect(() => {
-    const run = async () => {
+    const getCasts = async () => {
       try {
         const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
-        console.log("res data:", res.data);
+
+        // console.log("casts data:", res.data);
         setData(res.data);
-        // setCasts(res.data.cast);
-        // console.log(res.data.cast);
       } catch (err) {
         setError("failed:", err);
       }
     };
-    run();
+    getCasts();
+
+    const getMovDetails = async () => {
+      try {
+        const res = await axios.get(`/api/tmdb/movies/${id}/details`);
+        setData(res.data);
+        console.log(res.data);
+      } catch (e) {
+        setError(e);
+      }
+    };
+    getMovDetails();
   }, [id]);
   return (
     <div>
-      <Credits id={id} />
+      <MovieDetails id={id} movie={data} />
     </div>
   );
 }

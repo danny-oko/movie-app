@@ -3,7 +3,7 @@ import axios from "axios";
 
 export async function GET(req, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const token = process.env.TMDB_TOKEN;
     const baseUrl = process.env.TMDB_BASE_URL;
@@ -11,7 +11,7 @@ export async function GET(req, { params }) {
     if (!token || !baseUrl) {
       return NextResponse.json(
         { error: "Missing environment variables" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
