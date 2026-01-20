@@ -7,7 +7,9 @@ import axios from "axios";
 export default function Page() {
   const { id } = useParams();
 
-  const [data, setData] = useState([]);
+  const [casts, setCasts] = useState([]);
+  const [details, setDetails] = useState([]);
+  const [video, setVideo] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -15,8 +17,8 @@ export default function Page() {
       try {
         const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
 
-        // console.log("casts data:", res.data);
-        setData(res.data);
+        console.log("casts data:", res.data);
+        setCasts(res.data);
       } catch (err) {
         setError("failed:", err);
       }
@@ -26,17 +28,29 @@ export default function Page() {
     const getMovDetails = async () => {
       try {
         const res = await axios.get(`/api/tmdb/movies/${id}/details`);
-        setData(res.data);
+        setDetails(res.data);
         console.log(res.data);
       } catch (e) {
         setError(e);
       }
     };
     getMovDetails();
+
+    const getVideo = async () => {
+      try {
+        const res = await axios.get(`/api/tmdb/movies/${id}/video`);
+        console.log(res.data);
+        setVideo(res.data);
+      } catch (err) {
+        setError(err);
+        setVideo([]);
+      }
+    };
+    getVideo();
   }, [id]);
   return (
     <div>
-      <MovieDetails id={id} movie={data} />
+      <MovieDetails id={id} movie={details} />
     </div>
   );
 }
