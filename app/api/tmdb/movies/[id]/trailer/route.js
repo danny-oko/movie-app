@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(req, { params }) {
+export async function GET(_req, { params }) {
   try {
     const { id } = await params;
 
@@ -23,7 +23,7 @@ export async function GET(req, { params }) {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    // console.log("trailer data", res.data);
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status ?? 500;
