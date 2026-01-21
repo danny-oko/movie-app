@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(_req, { params }) {
+export async function GET(_request, { params }) {
   try {
     const { id } = await params;
 
@@ -15,7 +15,7 @@ export async function GET(_req, { params }) {
       );
     }
 
-    const url = ` https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`;
+    const url = `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`;
 
     const res = await axios.get(url, {
       headers: {
@@ -23,14 +23,16 @@ export async function GET(_req, { params }) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("trailer data", res.data);
 
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
-    const status = err?.response?.status ?? 500;
     const message =
-      err?.response?.data?.status_message ?? err?.message ?? "Server error";
+      err?.response?.data?.status_message ||
+      err?.message ||
+      "Internal server error";
 
-    return NextResponse.json({ error: message }, { status });
+    const status = err?.response?.status || 500;
+
+    return NextResponse.json({ message }, { status });
   }
 }
