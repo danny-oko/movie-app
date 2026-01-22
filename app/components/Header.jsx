@@ -1,37 +1,23 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
+import axios from "axios";
 
 const Header = () => {
-  const genresArr = [
-    "Action",
-    "Adventure",
-    "Animation",
-    "Biography",
-    "Comedy",
-    "Crime",
-    "Documentary",
-    "Drama",
-    "Family",
-    "Fantasy",
-    "Film-Noir",
-    "Game-Show",
-    "History",
-    "Horror",
-    "Music",
-    "Musical",
-    "Mystery",
-    "News",
-    "Reality-TV",
-    "Romance",
-    "Sci-Fi",
-    "Short",
-    "Sport",
-    "Talk-Show",
-    "Thriller",
-    "War",
-    "Western",
-  ];
+  const [genres, setGenres] = useState([]);
+
+  useEffect(() => {
+    const getGenres = async () => {
+      try {
+        const res = await axios.get("/api/tmdb/genres");
+        setGenres(res.data?.genres ?? []);
+        // console.log(res.data?.genres);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getGenres();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("genre");
@@ -77,7 +63,7 @@ const Header = () => {
 
         {open && (
           <Modal
-            genres={genresArr}
+            genres={genres}
             onSelect={(item) => {
               setSelectedGenre(item);
               setOpen(false);

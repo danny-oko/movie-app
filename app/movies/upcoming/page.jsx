@@ -19,7 +19,6 @@ const Page = ({ movies }) => {
         if (!alive) return;
 
         setMovieList(res.data?.results ?? []);
-        console.log(res.data);
       } catch (error) {
         if (!alive) return;
         setError("internal server error");

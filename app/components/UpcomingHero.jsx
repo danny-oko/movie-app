@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import axios from "axios";
-import { Button, buttonVariants } from "@/components/ui/button";
+
 import {
   Carousel,
   CarouselContent,
@@ -9,18 +10,18 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../../components/ui/carousel";
+
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
-const imageUrl = "https://image.tmdb.org/t/p/original";
+import { Button } from "@/components/ui/button";
+
+const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
 export default function UpcomingHero() {
   const [movies, setMovies] = useState([]);
@@ -28,12 +29,93 @@ export default function UpcomingHero() {
   const [error, setError] = useState(null);
 
   const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
-  const closeModal = () => {
+  const [trailerLoading, setTrailerLoading] = useState(false);
+  const [embedUrl, setEmbedUrl] = useState(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const getMovie = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const res = await axios.get("/api/tmdb/nowPlaying", {
+          signal: controller.signal,
+        });
+
+        setMovies(res.data?.results ?? []);
+      } catch (e) {
+        if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
+        setError("Internal Server Error");
+        setMovies([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getMovie();
+    return () => controller.abort();
+  }, []);
+
+  const closeModal = useCallback(() => {
     setOpen(false);
+    setSelectedId(null);
     setEmbedUrl(null);
     setTrailerLoading(false);
-  };
+  }, []);
+
+  const onWatchTrailer = useCallback((movieId) => {
+    setSelectedId(movieId);
+    setOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open || !selectedId) return;
+
+    const controller = new AbortController();
+
+    const getTrailer = async () => {
+      setTrailerLoading(true);
+      setEmbedUrl(null);
+
+      try {
+        const res = await axios.get(`/api/tmdb/movies/${selectedId}/trailer`, {
+          signal: controller.signal,
+        });
+
+        const results = res.data?.results ?? [];
+
+        const picked =
+          results.find((v) => v.site === "YouTube" && v.type === "Trailer") ||
+          results.find(
+            (v) =>
+              v.site === "YouTube" &&
+              (v.type === "Teaser" || v.type === "Clip"),
+          ) ||
+          results.find((v) => v.site === "YouTube");
+
+        if (picked?.key) {
+          setEmbedUrl(
+            `https://www.youtube.com/embed/${picked.key}?autoplay=1&rel=0`,
+          );
+        } else {
+          setEmbedUrl(null);
+        }
+      } catch (e) {
+        if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
+        console.log("failed to get trailer data", e);
+        setEmbedUrl(null);
+      } finally {
+        setTrailerLoading(false);
+      }
+    };
+
+    getTrailer();
+    return () => controller.abort();
+  }, [open, selectedId]);
 
   useEffect(() => {
     if (!open) return;
@@ -49,120 +131,85 @@ export default function UpcomingHero() {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [open, closeModal]);
 
-  // Fetch now playing movies
-  useEffect(() => {
-    let alive = true;
-
-    (async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const res = await axios.get("/api/tmdb/nowPlaying");
-        if (!alive) return;
-        console.log("tmdb data for hero section:", res.data);
-        setMovies(res.data?.results ?? []);
-      } catch (e) {
-        if (!alive) return;
-        setError("Internal Server Error");
-        setMovies([]);
-      } finally {
-        if (alive) setIsLoading(false);
-      }
-    })();
-
-    return () => {
-      alive = false;
-    };
-  }, []);
+  const topMovies = useMemo(() => (movies ?? []).slice(0, 10), [movies]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
+  if (!topMovies.length) return <p>No movies found.</p>;
 
   return (
-    <div className="w-full h-[60vh] relative overflow-hidden rounded-lg">
-      <Carousel>
-        <CarouselContent>
-          {movies.slice(0, 10).map((m) => (
-            <CarouselItem key={m.id}>
-              <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
-                {/* Background image */}
-                <img
-                  src={`${imageUrl}${m.backdrop_path}`}
-                  alt={m.title}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+    <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
+      <Carousel className="h-full w-full">
+        <CarouselContent className="h-full">
+          {topMovies.map((m) => {
+            const backdrop = m?.backdrop_path
+              ? `${IMAGE_BASE}${m.backdrop_path}`
+              : null;
 
-                {/* Dark fade overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            return (
+              <CarouselItem key={m.id} className="h-full">
+                <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
+                  {backdrop ? (
+                    <img
+                      src={backdrop}
+                      alt={m?.title ?? "Movie"}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-zinc-900" />
+                  )}
 
-                {/* Content */}
-                <div className="ml-[140px] absolute left-10 top-1/2 z-10 w-[520px] -translate-y-1/2 text-white">
-                  <p className="text-sm opacity-80">Now Playing:</p>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
 
-                  <h2 className="mt-2 text-4xl font-bold leading-tight">
-                    {m.title}
-                  </h2>
+                  <div className="absolute left-10 top-1/2 z-10 w-[520px] -translate-y-1/2 text-white max-md:left-6 max-md:w-[85%]">
+                    <p className="text-sm opacity-80">Now Playing:</p>
 
-                  <div className="mt-3 flex items-center gap-2 text-sm opacity-90">
-                    <span className="text-yellow-400">★</span>
-                    <span className="font-medium">
-                      {m.vote_average?.toFixed(1)}
-                    </span>
-                    <span className="opacity-60">/ 10</span>
+                    <h2 className="mt-2 text-4xl font-bold leading-tight max-md:text-3xl">
+                      {m?.title}
+                    </h2>
+
+                    <div className="mt-3 flex items-center gap-2 text-sm opacity-90">
+                      <span className="text-yellow-400">★</span>
+                      <span className="font-medium">
+                        {Number(m?.vote_average ?? 0).toFixed(1)}
+                      </span>
+                      <span className="opacity-60">/ 10</span>
+                    </div>
+
+                    <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-white/80">
+                      {m?.overview}
+                    </p>
+
+                    <div className="mt-6">
+                      <Button onClick={() => onWatchTrailer(m.id)}>
+                        Watch trailer
+                      </Button>
+                    </div>
                   </div>
-
-                  <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-white/80">
-                    {m.overview}
-                  </p>
-
-                  <button>
-                    {/* <Dialog>
-                      <DialogTrigger>Open</DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Are you absolutely sure?</DialogTitle>
-                          <DialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your account and remove your data from our
-                            servers.
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog> */}
-                   watch trailer
-                  </button>
                 </div>
-              </div>
-            </CarouselItem>
-          ))}
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
 
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
 
-      {/* trailer modal */}
-      {open && (
-        <div
-          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 p-4"
-          onMouseDown={closeModal}
-        >
-          <div
-            className="w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden relative"
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeModal}
-              className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-black rounded-full w-9 h-9 flex items-center justify-center"
-              aria-label="Close"
-              type="button"
-            >
-              ✕
-            </button>
+      <Dialog
+        open={open}
+        onOpenChange={(v) => (v ? setOpen(true) : closeModal())}
+      >
+        <DialogContent className="w-[1000px] h-[560px] overflow-hidden p-0 object-cover">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Trailer</DialogTitle>
+            <DialogDescription>Movie trailer preview</DialogDescription>
+          </DialogHeader>
 
+          <div className="relative object-cover w-full bg-black">
             {trailerLoading && (
               <div className="absolute inset-0 flex items-center justify-center text-white">
                 Loading trailer...
@@ -170,14 +217,14 @@ export default function UpcomingHero() {
             )}
 
             {!trailerLoading && !embedUrl && (
-              <div className="absolute inset-0 flex items-center justify-center text-white text-center px-6">
+              <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-white">
                 Trailer not available for this movie 😭
               </div>
             )}
 
             {!trailerLoading && embedUrl && (
               <iframe
-                className="w-full h-full"
+                className="h-full w-full"
                 src={embedUrl}
                 title="YouTube trailer"
                 allow="autoplay; encrypted-media; picture-in-picture"
@@ -185,8 +232,8 @@ export default function UpcomingHero() {
               />
             )}
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
