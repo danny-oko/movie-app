@@ -5,11 +5,13 @@ import MovieDetails from "../../../components/ui/MovieDetails";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function Page() {
   const { id } = useParams();
+
+  const router = useRouter();
 
   const [crew, setCrew] = useState([]);
   const [casts, setCasts] = useState([]);
@@ -19,6 +21,9 @@ export default function Page() {
   const [video, setVideo] = useState([]);
   const [error, setError] = useState(null);
 
+  const pushToSimilarMoviePage = (id) => {
+    router.push(`/pages/similiar/${id}`);
+  };
   useEffect(() => {
     const getCredits = async () => {
       try {
@@ -59,6 +64,7 @@ export default function Page() {
       try {
         const res = await axios.get(`/api/tmdb/movies/${id}/similiar`);
         setSimiliar(res.data.results ?? []);
+        console.log(res.data.results);
       } catch (err) {
         setError(err);
         setSimiliar([]);
@@ -70,6 +76,9 @@ export default function Page() {
   return (
     <div>
       <Header />
+
+      {error && <p>{error}</p>}
+
       <MovieDetails
         id={id}
         movie={details}
@@ -77,6 +86,7 @@ export default function Page() {
         casts={casts}
         similiarData={similiar}
         trailer={video}
+        pushToSimilarMoviePage={pushToSimilarMoviePage}
       />
       <Footer />
     </div>

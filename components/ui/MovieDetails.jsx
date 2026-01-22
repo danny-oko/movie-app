@@ -1,45 +1,45 @@
 "use client";
 import React from "react";
 import MovieGridSimiliar from "./MovieGridSimiliar";
+import { Button } from "@/components/ui/button";
 
 const MovieDetails = ({
-  id,
   movie = null,
   crew = [],
   casts = [],
   similiarData = [],
   trailer = [],
+  id,
+  pushToSimilarMoviePage,
 }) => {
   if (!movie) return null;
 
   const genres = movie.genres || [];
 
-  // simple filters
   const director = crew.filter((p) => p.job === "Director");
   const writers = crew.filter((p) => p.department === "Writing");
   const stars = casts.filter((p) => p.known_for_department === "Acting");
 
-  // trailer key
   const trailerList = Array.isArray(trailer) ? trailer : trailer?.results || [];
   const bestTrailer =
     trailerList.find((v) => v.site === "YouTube" && v.type === "Trailer") ||
     trailerList.find((v) => v.site === "YouTube");
+
   const trailerKey = bestTrailer ? bestTrailer.key : null;
 
-  // runtime
   const hour = Math.floor((movie.runtime || 0) / 60);
   const minute = (movie.runtime || 0) % 60;
 
-  // poster (IMPORTANT: null, not "")
   const imgBaseUrl = "https://image.tmdb.org/t/p/original";
   const posterUrl = movie?.poster_path
     ? `${imgBaseUrl}${movie.poster_path}`
     : null;
 
+  // const router = useRouter();
+
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-        {/* HEADER */}
         <div className="flex items-start justify-between gap-6">
           <div>
             <h1 className="text-4xl font-extrabold">{movie.original_title}</h1>
@@ -70,9 +70,7 @@ const MovieDetails = ({
           </div>
         </div>
 
-        {/* POSTER + TRAILER */}
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[290px_1fr]">
-          {/* Poster */}
           {posterUrl ? (
             <img
               src={posterUrl}
@@ -85,7 +83,6 @@ const MovieDetails = ({
             </div>
           )}
 
-          {/* Trailer */}
           <div className="overflow-hidden rounded-xl">
             {trailerKey ? (
               <iframe
@@ -103,7 +100,6 @@ const MovieDetails = ({
           </div>
         </div>
 
-        {/* GENRES */}
         <div className="mt-5 flex flex-wrap gap-2">
           {genres.map((g) => (
             <span
@@ -115,12 +111,10 @@ const MovieDetails = ({
           ))}
         </div>
 
-        {/* OVERVIEW */}
         <p className="mt-4 max-w-5xl text-sm leading-6 text-zinc-700">
           {movie.overview}
         </p>
 
-        {/* CREDITS (no surrounding border) */}
         <div className="mt-8">
           <CreditRow
             label="Director"
@@ -139,13 +133,15 @@ const MovieDetails = ({
           <Divider />
         </div>
 
-        {/* SIMILIAR */}
         <div className="mt-10">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">More like this</h2>
-            <button className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
-              See more →
-            </button>
+            <Button
+              variant="seeMore"
+              onClick={() => pushToSimilarMoviePage(id)}
+            >
+              More like this →
+            </Button>
           </div>
 
           <div className="mt-5">
@@ -160,8 +156,8 @@ const MovieDetails = ({
 function CreditRow({ label, values = [] }) {
   return (
     <div className="grid grid-cols-[180px_1fr] items-center py-6">
-      <p className="text-xl font-bold text-zinc-900">{label}</p>
-      <p className="text-xl text-zinc-800">
+      <p className="text-md font-bold text-zinc-900">{label}</p>
+      <p className="text-md text-zinc-800">
         {values.length ? values.join(" · ") : "--"}
       </p>
     </div>
