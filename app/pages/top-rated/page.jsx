@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -28,7 +27,6 @@ const Page = () => {
 
         if (!alive) return;
 
-        // console.log("TMDB response:", res.data);
         setMovieList(res.data?.results ?? []);
       } catch (e) {
         if (!alive) return;
@@ -48,21 +46,29 @@ const Page = () => {
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <div className="upcoming flex flex-col gap-8 p-26">
-        {isLoading && <p>Loading...</p>}
-        {error && <p>{Error}</p>}
-        <aside className="titles w-full h-12 flex items-center justify-between">
-          <h3 className="font-semibold text-2xl">Top Rated</h3>
-          <Button variant="seeMore">
-            <Link href={"/"}>← Back to Menu</Link>
-          </Button>
-        </aside>
-        <MovieGrid movies={movieList} />
-      </div>
+
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+          {isLoading && <p>Loading...</p>}
+          {error && <p>{Error}</p>}
+
+          <aside className="flex items-center justify-between">
+            <h3 className="text-2xl font-semibold text-zinc-900">Top Rated</h3>
+            <Button variant="seeMore">
+              <Link href={"/"}>← Back to Menu</Link>
+            </Button>
+          </aside>
+
+          <div className="mt-5">
+            <MovieGrid movies={movieList} />
+          </div>
+        </div>
+      </main>
+
       <Footer />
-    </>
+    </div>
   );
 };
 

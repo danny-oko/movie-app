@@ -43,17 +43,23 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="upcoming flex flex-col gap-8 pl-24 pr-26">
-      {isLoading && <p>Loading...</p>}
-      {error && <p>{Error}</p>}
-      <aside className="titles w-full h-12 flex items-center justify-between">
-        <h3 className="font-semibold text-2xl">Popular</h3>
-        <Button variant="seeMore">
-          <Link href={"/pages/popular"}>See more →</Link>
-        </Button>
-      </aside>
-      <MovieGrid movies={movieList} />
-    </div>
+    <section className="bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{Error}</p>}
+
+        <aside className="flex items-center justify-between">
+          <h3 className="text-2xl font-semibold text-zinc-900">Popular</h3>
+          <Button variant="seeMore">
+            <Link href={"/pages/popular"}>See more →</Link>
+          </Button>
+        </aside>
+
+        <div className="mt-5">
+          <MovieGrid movies={movieList} />
+        </div>
+      </div>
+    </section>
   );
 };
 

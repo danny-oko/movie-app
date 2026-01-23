@@ -34,17 +34,23 @@ const Page = ({ movies }) => {
   }, []);
 
   return (
-    <div className="upcoming flex flex-col gap-8 p-26">
-      {isLoading && <p>Loading...</p>}
-      {error && <p>{Error}</p>}
-      <aside className="titles w-full h-12 flex items-center justify-between">
-        <h3 className="font-semibold text-2xl">Upcoming</h3>
-        <Button variant="seeMore">
-          <Link href={"/pages/upcoming"}>See more →</Link>
-        </Button>
-      </aside>
-      <MovieGrid movies={movieList} />
-    </div>
+    <section className="bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{Error}</p>}
+
+        <aside className="flex items-center justify-between">
+          <h3 className="text-2xl font-semibold text-zinc-900">Upcoming</h3>
+          <Button variant="seeMore">
+            <Link href={"/pages/upcoming"}>See more →</Link>
+          </Button>
+        </aside>
+
+        <div className="mt-5">
+          <MovieGrid movies={movieList} />
+        </div>
+      </div>
+    </section>
   );
 };
 

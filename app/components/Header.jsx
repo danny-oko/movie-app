@@ -40,40 +40,44 @@ const Header = () => {
   }, [open]);
 
   return (
-    <header className="w-full h-[60px] flex justify-around items-center">
-      <h1 className="text-bg-indigo font-bold">🎥 Movie Z</h1>
+    <header className="w-full border-b border-zinc-200 bg-white">
+      <div className="mx-auto flex h-[60px] w-full items-center justify-between px-32">
+        <h1 className="text-lg font-extrabold text-zinc-900">🎥 Movie Z</h1>
 
-      <div className="relative flex gap-2" ref={wrapperRef}>
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="w-auto gap-2 h-[36px] border border-border-gray rounded-sm px-2 flex items-center justify-between bg-white"
-        >
-          <span className="text-sm">{selectedGenre}</span>
-          <span className={`text-xl transition ${open ? "rotate-180" : ""}`}>
-            ▾
-          </span>
-        </button>
+        <div className="relative flex items-center gap-2" ref={wrapperRef}>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="h-9 min-w-[120px] select-none rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-800 flex items-center justify-between gap-2"
+          >
+            <span className="truncate">{selectedGenre}</span>
+            <span
+              className={`text-base transition ${open ? "rotate-180" : ""}`}
+            >
+              ▾
+            </span>
+          </button>
 
-        <input
-          type="search"
-          placeholder="⌕ Search"
-          className="w-[380px] h-[36px] border border-border-gray rounded-sm p-2"
-        />
-
-        {open && (
-          <Modal
-            genres={genres}
-            onSelect={(item) => {
-              setSelectedGenre(item);
-              setOpen(false);
-            }}
+          <input
+            type="search"
+            placeholder="⌕ Search"
+            className="h-9 w-[260px] sm:w-[340px] md:w-[380px] rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none"
           />
-        )}
-      </div>
 
-      <div className="flex items-center justify-center w-[36px] h-[36px] border border-border-gray rounded-lg">
-        ☾
+          {open && (
+            <Modal
+              genres={genres}
+              onSelect={(item) => {
+                setSelectedGenre(item);
+                setOpen(false);
+              }}
+            />
+          )}
+        </div>
+
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 text-zinc-700">
+          ☾
+        </div>
       </div>
     </header>
   );
