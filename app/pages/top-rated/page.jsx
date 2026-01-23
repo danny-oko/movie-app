@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
-import MovieGridPages from "../../../components/ui/MovieGridPages";
+import MovieGrid from "../../../components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
 
 const Page = () => {
@@ -59,7 +59,7 @@ const Page = () => {
             <Link href={"/"}>← Back to Menu</Link>
           </Button>
         </aside>
-        <MovieGridPages movies={movieList} />
+        <MovieGrid movies={movieList} />
       </div>
       <Footer />
     </>
