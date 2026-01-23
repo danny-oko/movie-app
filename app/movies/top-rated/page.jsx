@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import MovieGrid from "@/components/ui/MovieGrid";
+
+import MovieGridForMore from "@/components/ui/MovieGridComponentForMorePages";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -51,7 +52,7 @@ const Page = () => {
           <Link href={"/pages/top-rated"}>See more →</Link>
         </Button>
       </aside>
-      <MovieGrid movies={movieList} />
+      <MovieGridForMore movies={movieList} />
     </div>
   );
 };

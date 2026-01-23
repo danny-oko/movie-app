@@ -203,13 +203,13 @@ export default function UpcomingHero() {
         open={open}
         onOpenChange={(v) => (v ? setOpen(true) : closeModal())}
       >
-        <DialogContent className="w-[1000px] h-[560px] overflow-hidden p-0 object-cover">
+        <DialogContent className="p-0 overflow-hidden max-w-none w-[min(1200px,96vw)] h-[min(80vh,720px)]">
           <DialogHeader className="sr-only">
             <DialogTitle>Trailer</DialogTitle>
             <DialogDescription>Movie trailer preview</DialogDescription>
           </DialogHeader>
 
-          <div className="relative object-cover w-full bg-black">
+          <div className="w-full h-full bg-black">
             {trailerLoading && (
               <div className="absolute inset-0 flex items-center justify-center text-white">
                 Loading trailer...
@@ -218,7 +218,7 @@ export default function UpcomingHero() {
 
             {!trailerLoading && !embedUrl && (
               <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-white">
-                Trailer not available for this movie 😭
+                Trailer not available for this movie
               </div>
             )}
 

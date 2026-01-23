@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 
-import MovieGrid from "@/components/ui/MovieGrid";
+import MovieGridForMore from "@/components/ui/MovieGridComponentForMorePages";
 import { Button } from "@/components/ui/button";
 
 const Page = ({ movies }) => {
@@ -43,7 +43,7 @@ const Page = ({ movies }) => {
           <Link href={"/pages/upcoming"}>See more →</Link>
         </Button>
       </aside>
-      <MovieGrid movies={movieList} />
+      <MovieGridForMore movies={movieList} />
     </div>
   );
 };
