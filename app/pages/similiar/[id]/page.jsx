@@ -28,15 +28,27 @@ export default async function Page({ params }) {
 
   // console.log(moviesData);
   return (
-    <div>
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      <div className="buttons pr-36 pl-36 w-full flex items-center justify-between mt-16">
-        <h1 className="text-2xl font-bold">Similiar</h1>
-        <a href="/">Return to home page</a>
-      </div>
-      <div className="grid-holder pl-36 pr-36 pb-36 mt-12">
-        <MovieGrid movies={moviesData} />
-      </div>
+
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold text-zinc-900">Similiar</h1>
+            <a
+              href="/"
+              className="text-sm text-zinc-700 hover:underline text-md"
+            >
+              Return to home page
+            </a>
+          </div>
+
+          <div className="mt-5">
+            <MovieGrid movies={moviesData} />
+          </div>
+        </div>
+      </main>
+
       <Footer />
     </div>
   );
