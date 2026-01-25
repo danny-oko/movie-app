@@ -3,6 +3,17 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import MovieGrid from "../../../../components/ui/MovieGrid";
 
+// pagination
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 const getSimiliarMovies = async (id) => {
   try {
     const res = await fetch(
@@ -26,7 +37,6 @@ export default async function Page({ params }) {
   const { id } = resolvedParams;
   const moviesData = await getSimiliarMovies(id);
 
-  // console.log(moviesData);
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
@@ -37,7 +47,7 @@ export default async function Page({ params }) {
             <h1 className="text-2xl font-semibold text-zinc-900">Similiar</h1>
             <a
               href="/"
-              className="text-sm text-zinc-700 hover:underline text-md"
+              className="text-sm text-zinc-700 text-md cursor-pointer"
             >
               Return to home page
             </a>
@@ -48,6 +58,34 @@ export default async function Page({ params }) {
           </div>
         </div>
       </main>
+
+      {/* pagination section */}
+      {/* <section className="pagination w-full flex justify-end items-center pb-8">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="${process.env.TMDB_BASE_URL}/movie/${id}/similar?language=en-US&page=1j" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </section> */}
 
       <Footer />
     </div>
