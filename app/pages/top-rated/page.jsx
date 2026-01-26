@@ -10,40 +10,42 @@ import Footer from "../../components/Footer";
 import MovieGrid from "../../../components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
 
+import Pager from "../../../components/ui/Pager";
+
 const Page = () => {
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [movieList, setMovieList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    let alive = true;
-
+    const controller = new AbortController();
     const run = async () => {
       try {
-        setError(null);
-        setIsLoading(true);
-
-        const res = await axios.get("/api/tmdb/top-rated");
-
-        if (!alive) return;
-
-        setMovieList(res.data?.results ?? []);
+        const { data } = await axios.get(`/api/tmdb/top-rated?page=${page}`, {
+          signal: controller.signal,
+        });
+        setMovies(data?.results);
+        setTotalPage(data.total_pages);
       } catch (e) {
-        if (!alive) return;
-        console.error(e);
-        setError("Failed to fetch data from TMDB");
-        setMovieList([]);
+        if (
+          axios.isCancel?.(e) ||
+          e.name === "CanceledError" ||
+          e.code === "ERR_CANCELED"
+        ) {
+          setError(e?.message || "Failed to load");
+        }
       } finally {
-        if (!alive) return;
-        setIsLoading(false);
+        setLoading(false);
       }
     };
-
     run();
+
     return () => {
-      alive = false;
+      controller.abort();
     };
-  }, []);
+  }, [page]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -51,8 +53,8 @@ const Page = () => {
 
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          {isLoading && <p>Loading...</p>}
-          {error && <p>{Error}</p>}
+          {loading && <p>Loading...</p>}
+          {error && <p>{error}</p>}
 
           <aside className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-zinc-900">Top Rated</h3>
@@ -62,9 +64,16 @@ const Page = () => {
           </aside>
 
           <div className="mt-5">
-            <MovieGrid movies={movieList} />
+            <MovieGrid movies={movies} />
           </div>
         </div>
+
+        <Pager
+          page={page}
+          totalPages={totalPage}
+          maxButtons={3}
+          onPageChange={setPage}
+        />
       </main>
 
       <Footer />

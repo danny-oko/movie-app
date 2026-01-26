@@ -21,7 +21,6 @@ const Page = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    window.scrollTo({ top: 0, behavior: "smooth" });
     const runEffect = async () => {
       try {
         const { data } = await axios.get(`/api/tmdb/popular?page=${page}`, {
