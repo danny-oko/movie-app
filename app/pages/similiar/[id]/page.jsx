@@ -3,16 +3,7 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import MovieGrid from "../../../../components/ui/MovieGrid";
 
-// pagination
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import Pager from "../../../../components/ui/Pager";
 
 const getSimiliarMovies = async (id) => {
   try {
@@ -59,33 +50,7 @@ export default async function Page({ params }) {
         </div>
       </main>
 
-      {/* pagination section */}
-      {/* <section className="pagination w-full flex justify-end items-center pb-8">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="${process.env.TMDB_BASE_URL}/movie/${id}/similar?language=en-US&page=1j" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </section> */}
+      <div className="pagination">{/* <Pager /> */}</div>
 
       <Footer />
     </div>

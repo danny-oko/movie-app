@@ -82,7 +82,7 @@ const Page = () => {
           <aside className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-zinc-900">Upcoming</h3>
             <Button variant="seeMore">
-              <Link href={"/"}>← Back to Menu</Link>
+              <Link href={"/"}>← Return to home page</Link>
             </Button>
           </aside>
 
