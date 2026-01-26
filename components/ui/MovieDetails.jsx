@@ -1,7 +1,9 @@
 "use client";
+
 import React from "react";
 import MovieGridSimiliar from "./MovieGridSimiliar";
 import { Button } from "../ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MovieDetails = ({
   movie = null,
@@ -11,7 +13,10 @@ const MovieDetails = ({
   trailer = [],
   id,
   pushToSimilarMoviePage,
+  loading = false,
 }) => {
+  if (loading) return <MovieDetailsSkeleton />;
+
   if (!movie) return null;
 
   const genres = movie.genres || [];
@@ -34,8 +39,6 @@ const MovieDetails = ({
   const posterUrl = movie?.poster_path
     ? `${imgBaseUrl}${movie.poster_path}`
     : null;
-
-  // const router = useRouter();
 
   return (
     <div className="min-h-screen bg-white">
@@ -166,6 +169,66 @@ function CreditRow({ label, values = [] }) {
 
 function Divider() {
   return <div className="h-px w-full bg-zinc-200" />;
+}
+
+function MovieDetailsSkeleton() {
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+        <div className="flex items-start justify-between gap-6">
+          <div className="space-y-3">
+            <Skeleton className="h-10 w-[360px]" />
+            <Skeleton className="h-4 w-[260px]" />
+          </div>
+          <div className="text-right space-y-2">
+            <Skeleton className="h-3 w-20 ml-auto" />
+            <Skeleton className="h-8 w-24 ml-auto" />
+            <Skeleton className="h-3 w-28 ml-auto" />
+          </div>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[290px_1fr]">
+          <Skeleton className="h-[428px] w-[290px] rounded-xl" />
+          <Skeleton className="h-[428px] w-full rounded-xl" />
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-7 w-20 rounded-full" />
+          ))}
+        </div>
+
+        <div className="mt-4 space-y-2 max-w-5xl">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-11/12" />
+          <Skeleton className="h-4 w-10/12" />
+        </div>
+
+        <div className="mt-8 space-y-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i}>
+              <div className="grid grid-cols-[180px_1fr] items-center py-6">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-72" />
+              </div>
+              <Divider />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-9 w-36 rounded-md" />
+          </div>
+
+          <div className="mt-5">
+            <MovieGridSimiliar isLoading />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default MovieDetails;

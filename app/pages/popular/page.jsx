@@ -53,7 +53,6 @@ const Page = () => {
 
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          {loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
 
           <aside className="flex items-center justify-between">
@@ -64,7 +63,7 @@ const Page = () => {
           </aside>
 
           <div className="mt-5">
-            <MovieGrid movies={movies} />
+            <MovieGrid movies={movies} isLoading={loading} />
           </div>
         </div>
 
@@ -73,6 +72,7 @@ const Page = () => {
           totalPages={totalPages}
           onPageChange={setPage}
           maxButtons={3}
+          disabled={loading}
         />
       </main>
 

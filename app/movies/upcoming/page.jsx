@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const Page = ({ movies }) => {
   const [movieList, setMovieList] = useState([]);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
@@ -25,7 +25,7 @@ const Page = ({ movies }) => {
         setError("internal server error");
       } finally {
         if (!alive) return;
-        setIsLoading(false);
+        setLoading(false);
       }
     };
     run();
@@ -37,7 +37,6 @@ const Page = ({ movies }) => {
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-6xl px-6 py-10">
-        {isLoading && <p>Loading...</p>}
         {error && <p>{Error}</p>}
 
         <aside className="flex items-center justify-between">
@@ -48,7 +47,7 @@ const Page = ({ movies }) => {
         </aside>
 
         <div className="mt-5">
-          <MovieGrid movies={movieList} />
+          <MovieGrid movies={movieList} isLoading={loading} />
         </div>
       </div>
     </section>

@@ -64,15 +64,16 @@ const Page = () => {
           </aside>
 
           <div className="mt-5">
-            <MovieGrid movies={movies} />
+            <MovieGrid movies={movies} isLoading={loading} />
           </div>
         </div>
 
         <Pager
           page={page}
-          totalPages={totalPages}
+          totalPages={totalPage}
           onPageChange={setPage}
           maxButtons={3}
+          disabled={loading}
         />
       </main>
 

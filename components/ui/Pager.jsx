@@ -11,7 +11,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default function Pager({ page, totalPages, onPageChange, maxButtons }) {
+export default function Pager({
+  page,
+  totalPages,
+  onPageChange,
+  maxButtons = 5,
+  disabled = false,
+}) {
   const safeTotal = Math.max(1, Number(totalPages) || 1);
   const safePage = Math.min(safeTotal, Math.max(1, Number(page) || 1));
 
@@ -36,10 +42,15 @@ export default function Pager({ page, totalPages, onPageChange, maxButtons }) {
       };
     }, [safePage, safeTotal, maxButtons]);
 
-  const go = (p) => onPageChange(Math.min(safeTotal, Math.max(1, p)));
+  const go = (p) => {
+    if (disabled) return;
+    onPageChange(Math.min(safeTotal, Math.max(1, p)));
+  };
 
   return (
-    <div className="pb-12 flex flex-col gap-6">
+    <div
+      className={`pb-12 flex flex-col gap-6 ${disabled ? "opacity-60 pointer-events-none" : ""}`}
+    >
       <div className="flex items-center justify-center">
         <p className="text-sm text-zinc-600">
           Page <span className="font-semibold">{safePage}</span> / {safeTotal}

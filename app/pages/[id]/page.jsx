@@ -17,6 +17,7 @@ export default function Page() {
   const [casts, setCasts] = useState([]);
   const [details, setDetails] = useState([]);
   const [similiar, setSimiliar] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [video, setVideo] = useState([]);
   const [error, setError] = useState(null);
@@ -27,12 +28,15 @@ export default function Page() {
   useEffect(() => {
     const getCredits = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
 
         setCrew(res.data.crew);
         setCasts(res.data.cast);
       } catch (err) {
         setError("failed:", err);
+      } finally {
+        setLoading(false);
       }
     };
     getCredits();
@@ -87,7 +91,9 @@ export default function Page() {
         similiarData={similiar}
         trailer={video}
         pushToSimilarMoviePage={pushToSimilarMoviePage}
+        isLoading={loading}
       />
+
       <Footer />
     </div>
   );

@@ -23,7 +23,6 @@ const Page = () => {
 
         if (!alive) return;
 
-        // console.log("TMDB response:", res.data);
         setMovieList(res.data?.results ?? []);
       } catch (e) {
         if (!alive) return;
@@ -45,7 +44,6 @@ const Page = () => {
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-6xl px-6 py-10">
-        {isLoading && <p>Loading...</p>}
         {error && <p>{Error}</p>}
 
         <aside className="flex items-center justify-between">
@@ -56,7 +54,7 @@ const Page = () => {
         </aside>
 
         <div className="mt-5">
-          <MovieGrid movies={movieList} />
+          <MovieGrid movies={movieList} isLoading={isLoading} />
         </div>
       </div>
     </section>

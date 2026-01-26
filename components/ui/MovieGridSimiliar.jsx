@@ -1,11 +1,40 @@
 "use client";
+
 import React from "react";
 import MovieCard from "./MovieCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const MovieGridSimiliar = ({ movies = [] }) => {
+function MovieCardSkeleton() {
   return (
-    <div className="grid grid-cols-5 gap-8">
-      {movies.slice(0, 5).map((m) => (
+    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <Skeleton className="w-full aspect-[2/3] rounded-none" />
+      <div className="p-3 space-y-2">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-4 w-3/4" />
+      </div>
+    </div>
+  );
+}
+
+const MovieGridSimiliar = ({
+  movies = [],
+  isLoading = false,
+  limit = 5,
+  skeletonCount = 5,
+}) => {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+        {Array.from({ length: skeletonCount }).map((_, i) => (
+          <MovieCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+      {(movies || []).slice(0, limit).map((m) => (
         <MovieCard key={m.id} movie={m} />
       ))}
     </div>

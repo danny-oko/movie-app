@@ -11,17 +11,38 @@ import {
   CarouselPrevious,
 } from "../../components/ui/carousel";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+
+function UpcomingHeroSkeleton() {
+  return (
+    <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
+      {/* background */}
+      <Skeleton className="absolute inset-0 rounded-lg" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
+
+      {/* left text block */}
+      <div className="absolute left-32 top-1/2 z-10 w-[520px] -translate-y-1/2 max-md:left-6 max-md:w-[85%] space-y-4">
+        <Skeleton className="h-4 w-28 bg-white/20" />
+        <Skeleton className="h-10 w-[420px] bg-white/20 max-md:w-[260px]" />
+        <Skeleton className="h-4 w-32 bg-white/20" />
+
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-full bg-white/20" />
+          <Skeleton className="h-3 w-11/12 bg-white/20" />
+          <Skeleton className="h-3 w-10/12 bg-white/20" />
+          <Skeleton className="h-3 w-9/12 bg-white/20" />
+        </div>
+
+        <Skeleton className="h-10 w-36 rounded-md bg-white/20" />
+      </div>
+    </div>
+  );
+}
 
 export default function UpcomingHero() {
   const [movies, setMovies] = useState([]);
@@ -106,7 +127,6 @@ export default function UpcomingHero() {
         }
       } catch (e) {
         if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
-        console.log("failed to get trailer data", e);
         setEmbedUrl(null);
       } finally {
         setTrailerLoading(false);
@@ -135,7 +155,7 @@ export default function UpcomingHero() {
 
   const topMovies = useMemo(() => (movies ?? []).slice(0, 10), [movies]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <UpcomingHeroSkeleton />;
   if (error) return <p>{error}</p>;
   if (!topMovies.length) return <p>No movies found.</p>;
 

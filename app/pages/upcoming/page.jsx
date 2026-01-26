@@ -14,7 +14,7 @@ import Pager from "../../../components/ui/Pager";
 
 const Page = () => {
   const [error, setError] = useState(null);
-  const [Loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -54,7 +54,6 @@ const Page = () => {
 
       <main className="flex-1 flex flex-col items-center justify-center">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          {Loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
 
           <aside className="flex items-center justify-between">
@@ -65,7 +64,7 @@ const Page = () => {
           </aside>
 
           <div className="mt-5">
-            <MovieGrid movies={movies} />
+            <MovieGrid movies={movies} isLoading={loading} />
           </div>
         </div>
 
@@ -74,6 +73,7 @@ const Page = () => {
           totalPages={totalPages}
           onPageChange={setPage}
           maxButtons={3}
+          disabled={loading}
         />
       </main>
 

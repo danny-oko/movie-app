@@ -23,7 +23,6 @@ const Page = () => {
 
         if (!alive) return;
 
-        // console.log("TMDB response:", res.data);
         setMovieList(res.data?.results ?? []);
       } catch (e) {
         if (!alive) return;
@@ -56,7 +55,7 @@ const Page = () => {
         </aside>
 
         <div className="mt-5">
-          <MovieGrid movies={movieList} />
+          <MovieGrid movies={movieList} isLoading={isLoading} />
         </div>
       </div>
     </section>

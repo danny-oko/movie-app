@@ -67,7 +67,8 @@ export default function Page() {
           </div>
 
           <div className="mt-5">
-            {loading ? <p>Loading...</p> : <MovieGrid movies={movies} />}
+            <MovieGrid movies={movies} isLoading={loading} />
+
             {error && <p className="mt-4 text-red-600">{error}</p>}
           </div>
         </div>
@@ -78,6 +79,7 @@ export default function Page() {
             totalPages={totalPages}
             onPageChange={setPage}
             maxButtons={3}
+            disabled={loading}
           />
         </div>
       </main>
