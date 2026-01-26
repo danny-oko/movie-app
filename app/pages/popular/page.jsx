@@ -71,8 +71,8 @@ const Page = () => {
         <Pager
           page={page}
           totalPages={totalPages}
-          maxButtons={3}
           onPageChange={setPage}
+          maxButtons={3}
         />
       </main>
 

@@ -70,9 +70,9 @@ const Page = () => {
 
         <Pager
           page={page}
-          totalPages={totalPage}
-          maxButtons={3}
+          totalPages={totalPages}
           onPageChange={setPage}
+          maxButtons={3}
         />
       </main>
 
