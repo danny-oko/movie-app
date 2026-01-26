@@ -22,6 +22,8 @@ const Page = () => {
   useEffect(() => {
     const controller = new AbortController();
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
+      
     const run = async () => {
       try {
         setLoading(true);
@@ -32,16 +34,10 @@ const Page = () => {
         });
 
         setMovies(data?.results ?? []);
-        setTotalPages(data?.total_pages ?? []);
+        setTotalPages(data?.total_pages ?? 1);
       } catch (e) {
-        if (
-          axios.isCancel?.(e) ||
-          e.name === "CanceledError" ||
-          e.code === "ERR_CANCELED"
-        ) {
-          setError(e?.message || "Failed to Load!");
-        }
-        setError("Error:", e);
+        if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;
+        setError(e?.message || "Failed to load");
       } finally {
         setLoading(false);
       }
@@ -52,24 +48,6 @@ const Page = () => {
     };
   }, [page]);
 
-  const maxButtons = 3;
-
-  const half = Math.floor(maxButtons / 2);
-  let start = Math.max(1, page - half);
-  let end = Math.min(totalPages, start + maxButtons - 1);
-
-  // keep window size when near the end
-  start = Math.max(1, end - maxButtons + 1);
-
-  const pagesToShow = Array.from(
-    { length: end - start + 1 },
-    (_, i) => start + i,
-  );
-
-  const showLeftEllipsis = start > 2;
-  const showRightEllipsis = end < totalPages - 1;
-
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
@@ -77,7 +55,7 @@ const Page = () => {
       <main className="flex-1 flex flex-col items-center justify-center">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
           {Loading && <p>Loading...</p>}
-          {error && <p>{Error}</p>}
+          {error && <p>{error}</p>}
 
           <aside className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-zinc-900">Upcoming</h3>
