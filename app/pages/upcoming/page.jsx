@@ -10,48 +10,73 @@ import Footer from "../../components/Footer";
 import MovieGrid from "../../../components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
 
+import Pager from "../../../components/ui/Pager";
+
 const Page = () => {
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [movieList, setMovieList] = useState([]);
+  const [Loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    let alive = true;
+    const controller = new AbortController();
 
     const run = async () => {
       try {
+        setLoading(true);
         setError(null);
-        setIsLoading(true);
 
-        const res = await axios.get("/api/tmdb/upcoming");
+        const { data } = await axios.get(`/api/tmdb/upcoming?page=${page}`, {
+          signal: controller.signal,
+        });
 
-        if (!alive) return;
-
-        setMovieList(res.data?.results ?? []);
+        setMovies(data?.results ?? []);
+        setTotalPages(data?.total_pages ?? []);
       } catch (e) {
-        if (!alive) return;
-        console.error(e);
-        setError("Failed to fetch data from TMDB");
-        setMovieList([]);
+        if (
+          axios.isCancel?.(e) ||
+          e.name === "CanceledError" ||
+          e.code === "ERR_CANCELED"
+        ) {
+          setError(e?.message || "Failed to Load!");
+        }
+        setError("Error:", e);
       } finally {
-        if (!alive) return;
-        setIsLoading(false);
+        setLoading(false);
       }
     };
-
     run();
     return () => {
-      alive = false;
+      controller.abort();
     };
-  }, []);
+  }, [page]);
+
+  const maxButtons = 3;
+
+  const half = Math.floor(maxButtons / 2);
+  let start = Math.max(1, page - half);
+  let end = Math.min(totalPages, start + maxButtons - 1);
+
+  // keep window size when near the end
+  start = Math.max(1, end - maxButtons + 1);
+
+  const pagesToShow = Array.from(
+    { length: end - start + 1 },
+    (_, i) => start + i,
+  );
+
+  const showLeftEllipsis = start > 2;
+  const showRightEllipsis = end < totalPages - 1;
+
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col items-center justify-center">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          {isLoading && <p>Loading...</p>}
+          {Loading && <p>Loading...</p>}
           {error && <p>{Error}</p>}
 
           <aside className="flex items-center justify-between">
@@ -62,9 +87,16 @@ const Page = () => {
           </aside>
 
           <div className="mt-5">
-            <MovieGrid movies={movieList} />
+            <MovieGrid movies={movies} />
           </div>
         </div>
+
+        <Pager
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          maxButtons={3}
+        />
       </main>
 
       <Footer />

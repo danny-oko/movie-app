@@ -6,6 +6,7 @@ import Link from "next/link";
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
 
+
 const Page = ({ movies }) => {
   const [movieList, setMovieList] = useState([]);
   const [error, setError] = useState(null);
