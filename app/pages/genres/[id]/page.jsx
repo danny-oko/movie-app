@@ -1,118 +1,113 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 
 import MovieGrid from "../../../../components/ui/MovieGrid";
 import Pager from "../../../../components/ui/Pager";
 import { Button } from "../../../../components/ui/button";
+import { useQueryState, parseAsArrayOf, parseAsInteger } from "nuqs";
 
-import axios from "axios";
-import { useParams, useSearchParams } from "next/navigation";
-import { NuqsAdapter } from "nuqs/adapters/next/pages";
-
-const Page = () => {
+export default function Page() {
   const { id } = useParams();
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const page = searchParams.get("page") || "1";
 
-  // const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [totalPages, setTotalPages] = useState(1);
+  const page = useMemo(() => {
+    const raw = searchParams.get("page") || "1";
+    const n = Number(raw);
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  }, [searchParams]);
+
   const [genres, setGenres] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const [loadingGenres, setLoadingGenres] = useState(true);
+  const [loadingMovies, setLoadingMovies] = useState(true);
   const [error, setError] = useState(null);
 
-  const [movies, setMovies] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useQueryState(
+    "genres",
+    parseAsArrayOf(parseAsInteger).withDefault([]),
+  );
 
   useEffect(() => {
-    const controller = new AbortController();
+    let cancelled = false;
 
-    const fetchGenres = async () => {
+    async function fetchGenres() {
       try {
-        setLoading(true);
-        setError(null);
-
-        const res = await axios.get(`/api/tmdb/genres`, {
-          signal: controller.signal,
-        });
-        setGenres(res?.data?.genres ?? []);
+        setLoadingGenres(true);
+        const res = await axios.get("/api/tmdb/genres");
+        if (!cancelled) setGenres(res?.data?.genres ?? []);
       } catch (err) {
-        if (
-          axios.isCancel ||
-          e.name === "CanceledError" ||
-          e.code === "ERR_CANCELED"
-        ) {
-          setError(e?.message || "Failed to Load!");
-        }
+        if (!cancelled) setError(err?.message || "Failed to load genres");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoadingGenres(false);
       }
-    };
+    }
+
     fetchGenres();
 
-    const getMovies = async () => {
-      if (!id) return;
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+
+    async function fetchMovies() {
       try {
-        setLoading(true);
+        setLoadingMovies(true);
         setError(null);
 
         const res = await axios.get(
           `/api/tmdb/movies/${id}/movies-by-genre?page=${page}`,
         );
+
+        if (cancelled) return;
+
         setMovies(res?.data?.results ?? []);
+        setTotalPages(res?.data?.total_pages ?? 1);
+        console.log(res.data.results);
+        console.log(res.data.total_pages);
       } catch (err) {
-        if (
-          axios.isCancel ||
-          e.name === "CancelError" ||
-          e.code === "ERR_CANCELED"
-        ) {
-          setError(e?.message || "failed to load");
-        }
+        if (!cancelled) setError(err?.message || "Failed to load movies");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoadingMovies(false);
       }
-    };
-    getMovies();
+    }
 
-    const getTotalPages = async () => {
-      try {
-        const { data } = await axios.get(
-          `/api/tmdb/movies/${id}/movies-by-genre?page=${page}`,
-        );
-        setTotalPages(data?.total_pages);
-        console.log(data.total_pages);
-      } catch (err) {}
-    };
-    getTotalPages();
-
+    fetchMovies();
     return () => {
-      controller.abort();
+      cancelled = true;
     };
   }, [id, page]);
 
   return (
-    <div>
-      <section className="gernes">
-        {genres.map((genre) => (
-          <Button variant="default" key={genre.id}>
-            <NuqsAdapter>{genre.name}</NuqsAdapter>
+    <main>
+      {genres.map((genre) => (
+        <div className="flex flex-wrap gap-2">
+          <Button key={genre.id} variant="trailer" size="default">
+            {genre.name}
           </Button>
-        ))}
-      </section>
-      <section className="movies">
-        {movies.slice(0, 1).map((movie) => (
-          <div key={movie.id}>
-            <MovieGrid movies={movies} isLoading={loading} limit={12} />
-          </div>
-        ))}
-      </section>
-      <section className="pagination">
+        </div>
+      ))}
+      <div className="movies">
+        <MovieGrid movies={movies} limit={12} skeletonCount={12} />
+      </div>
+      <div className="pager">
         <Pager
-          page={page}
           totalPages={totalPages}
-          // onPageChange={page}
-          maxButtons={3}
+          onPageChange={page}
+          maxButtons={5}
+          // page={}
         />
-      </section>
-    </div>
+      </div>
+    </main>
   );
-};
-export default Page;
+}

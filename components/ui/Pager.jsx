@@ -51,12 +51,6 @@ export default function Pager({
     <div
       className={`pb-12 flex flex-col gap-6 ${disabled ? "opacity-60 pointer-events-none" : ""}`}
     >
-      <div className="flex items-center justify-center">
-        <p className="text-sm text-zinc-600">
-          Page <span className="font-semibold">{safePage}</span> / {safeTotal}
-        </p>
-      </div>
-
       <Pagination>
         <PaginationContent>
           <PaginationItem>
