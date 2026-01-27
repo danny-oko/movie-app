@@ -12,6 +12,7 @@ const Header = () => {
   const [selectedGenre, setSelectedGenre] = useState("genre");
   const wrapperRef = useRef(null);
 
+
   useEffect(() => {
     const getGenres = async () => {
       try {
@@ -82,6 +83,7 @@ const Header = () => {
                 setSelectedGenre(item);
                 setOpen(false);
               }}
+              // onclick={handleGenreRedirect}
             />
           )}
         </div>

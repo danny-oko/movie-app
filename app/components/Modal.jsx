@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 
 const Modal = ({ genres = [], onSelect }) => {
@@ -14,16 +15,16 @@ const Modal = ({ genres = [], onSelect }) => {
 
         <div className="flex flex-wrap gap-3 max-h-[190px] overflow-auto pr-1">
           {genres.map((g) => (
-            <button
+            <Link
+              href={`/pages/genres/${g.id}`}
               key={g.id}
               type="button"
               onClick={() => onSelect(g.name)}
               className="rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50"
             >
               {g.name}
-            </button>
+            </Link>
           ))}
-          {/* {genres && genres.map((g) => <p key={g.id}>{g.name}</p>)} */}
         </div>
       </div>
     </div>

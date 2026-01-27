@@ -24,7 +24,7 @@ export async function GET(_request, { params }) {
       },
     });
 
-    console.log(res.data);
+    // console.log(res.data);
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const message =

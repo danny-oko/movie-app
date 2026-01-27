@@ -23,7 +23,7 @@ export async function GET(_req, { params }) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("trailer data", res.data);
+    // console.log("trailer data", res.data);
 
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {

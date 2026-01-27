@@ -21,7 +21,7 @@ const Page = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    const runEffect = async () => {
+    const getData = async () => {
       try {
         const { data } = await axios.get(`/api/tmdb/popular?page=${page}`, {
           signal: controller.signal,
@@ -40,7 +40,7 @@ const Page = () => {
         setLoading(false);
       }
     };
-    runEffect();
+    getData();
 
     return () => {
       controller.abort();
