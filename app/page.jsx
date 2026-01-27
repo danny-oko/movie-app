@@ -23,6 +23,7 @@ const page = () => {
     .request(options)
     // .then((res) => console.log(res.data))
     .catch((err) => console.error(err));
+
   return (
     <>
       <Header />

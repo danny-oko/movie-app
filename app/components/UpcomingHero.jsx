@@ -204,7 +204,11 @@ export default function UpcomingHero() {
                     </p>
 
                     <div className="mt-6">
-                      <Button onClick={() => onWatchTrailer(m.id)}>
+                      <Button
+                        variant="trailer"
+                        size="lg"
+                        onClick={() => onWatchTrailer(m.id)}
+                      >
                         Watch trailer
                       </Button>
                     </div>
