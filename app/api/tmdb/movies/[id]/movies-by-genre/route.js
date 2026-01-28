@@ -29,7 +29,8 @@ export async function GET(req, { params }) {
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status || 500;
-    const message = err?.response?.status_message || "Internal Server Error!";
+    const message =
+      err?.response?.data?.status_message || "Internal Server Error!";
 
     return NextResponse.json({ message, status }, { status });
   }
