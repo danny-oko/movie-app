@@ -25,7 +25,6 @@ export async function GET(req, { params }) {
         },
       },
     );
-    console.log(data);
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status || 500;

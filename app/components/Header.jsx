@@ -5,13 +5,13 @@ import axios from "axios";
 
 import Modal from "./Modal";
 import { ModeToggle } from "@/components/ModeToggle"; 
+import Input from "./search/Input";
 
 const Header = () => {
   const [genres, setGenres] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("genre");
   const wrapperRef = useRef(null);
-
 
   useEffect(() => {
     const getGenres = async () => {
@@ -69,12 +69,14 @@ const Header = () => {
             </span>
           </button>
 
-          <input
+          <Input />
+
+          {/* <input
             type="search"
-            placeholder="⌕ Search"
+            placeholder="🔎︎ Search"
             className="h-9 w-[260px] sm:w-[340px] md:w-[380px] rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none
-                       dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-          />
+                 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+          /> */}
 
           {open && (
             <Modal
@@ -83,7 +85,6 @@ const Header = () => {
                 setSelectedGenre(item);
                 setOpen(false);
               }}
-              // onclick={handleGenreRedirect}
             />
           )}
         </div>

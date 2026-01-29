@@ -4,12 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const MovieCard = ({ movie, isLoading = false }) => {
+const SearchModal = ({ movie, isLoading = false }) => {
   if (isLoading) {
     return (
-      <div className="overflow-hidden rounded-xl border border-zinc-200">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
         <div className="relative overflow-hidden">
-          <Skeleton className="w-full aspect-[2/3] rounded-none" />
+          <Skeleton className="w-full aspect-[1/3] rounded-none" />
           <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
         </div>
 
@@ -20,7 +20,7 @@ const MovieCard = ({ movie, isLoading = false }) => {
           </div>
 
           <div className="relative overflow-hidden rounded">
-            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-2 w-3/4" />
             <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
           </div>
         </div>
@@ -67,4 +67,4 @@ const MovieCard = ({ movie, isLoading = false }) => {
   );
 };
 
-export default MovieCard;
+export default SearchModal;

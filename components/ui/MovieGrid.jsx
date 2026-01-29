@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function MovieCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-zinc-200">
       <Skeleton className="w-full aspect-[2/3] rounded-none" />
 
       <div className="p-3 space-y-2">
