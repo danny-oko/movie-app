@@ -35,12 +35,12 @@ const Page = ({ movies }) => {
   }, []);
 
   return (
-    <section className="bg-white">
+    <section className="bg-background">
       <div className="mx-auto max-w-6xl px-6 py-10">
         {error && <p>{Error}</p>}
 
         <aside className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-zinc-900">Upcoming</h3>
+          <h3 className="text-2xl font-semibold text-foreground">Upcoming</h3>
           <Button variant="seeMore">
             <Link href={"/pages/upcoming"}>See more →</Link>
           </Button>

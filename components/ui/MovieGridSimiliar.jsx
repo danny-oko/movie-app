@@ -1,12 +1,12 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 import MovieCard from "./MovieCard";
-import { Skeleton } from "@/components/ui/skeleton";
 
 function MovieCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-border bg-card">
       <Skeleton className="w-full aspect-[2/3] rounded-none" />
       <div className="p-3 space-y-2">
         <Skeleton className="h-4 w-24" />

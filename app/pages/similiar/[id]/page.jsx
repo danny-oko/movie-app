@@ -1,15 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
 import MovieGrid from "../../../../components/ui/MovieGrid";
 import Pager from "../../../../components/ui/Pager";
-
+import Footer from "../../../components/Footer";
+import Header from "../../../components/Header";
 
 export default function Page() {
   const { id } = useParams();
@@ -51,17 +50,17 @@ export default function Page() {
   }, [id, page]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-zinc-900">Similiar</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Similiar</h1>
 
             <Link
               href="/"
-              className="text-sm text-zinc-700 text-md cursor-pointer"
+              className="text-sm text-foreground hover:text-foreground/90 cursor-pointer"
             >
               Return to home page
             </Link>
@@ -70,7 +69,7 @@ export default function Page() {
           <div className="mt-5">
             <MovieGrid movies={movies} isLoading={loading} />
 
-            {error && <p className="mt-4 text-red-600">{error}</p>}
+            {error && <p className="mt-4 text-destructive">{error}</p>}
           </div>
         </div>
 

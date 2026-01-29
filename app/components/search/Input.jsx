@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
-import debounce from "lodash.debounce";
 import axios from "axios";
+import debounce from "lodash.debounce";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Input() {
   const { searchValue } = useSearchParams();
@@ -38,11 +38,24 @@ export default function Input() {
   }, [query]);
 
   return (
-    <div>
-      <input placeholder="Search movie..." onChange={onChange} />
-      {movies.map((m) => (
-        <p key={m.id}>{m.title || m.original_title}</p>
-      ))}
+    <div className="relative">
+      <input
+        placeholder="Search movie..."
+        onChange={onChange}
+        className="h-9 w-[260px] sm:w-[340px] md:w-[380px] rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+      />
+      {movies.length > 0 && (
+        <div className="absolute left-0 top-full z-50 mt-1 max-h-[280px] w-full overflow-auto rounded-lg border border-border bg-popover py-2 shadow-lg">
+          {movies.map((m) => (
+            <p
+              key={m.id}
+              className="px-3 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground"
+            >
+              {m.title || m.original_title}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

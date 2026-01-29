@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useCallback } from "react";
 import axios from "axios";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   Carousel,

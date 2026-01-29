@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import React from "react";
 
 export default function GenreChips({
   genres = [],
@@ -14,7 +14,7 @@ export default function GenreChips({
 }) {
   return (
     <div>
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
 
       <div className="mt-3 flex flex-wrap gap-2">
         {isLoading
@@ -31,8 +31,8 @@ export default function GenreChips({
                   className={[
                     "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs transition",
                     active
-                      ? "bg-zinc-900 text-white border-zinc-900"
-                      : "bg-white text-zinc-700 hover:bg-zinc-50 border-zinc-200",
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-foreground hover:bg-accent border-border",
                   ].join(" ")}
                 >
                   {genre.name}

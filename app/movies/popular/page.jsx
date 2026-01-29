@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import axios from "axios";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
@@ -42,13 +42,13 @@ const Page = () => {
   }, []);
 
   return (
-    <section className="bg-white">
+    <section className="bg-background">
       <div className="mx-auto max-w-6xl px-6 py-10">
         {isLoading && <p>Loading...</p>}
         {error && <p>{Error}</p>}
 
         <aside className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-zinc-900">Popular</h3>
+          <h3 className="text-2xl font-semibold text-foreground">Popular</h3>
           <Button variant="seeMore">
             <Link href={"/pages/popular"}>See more →</Link>
           </Button>

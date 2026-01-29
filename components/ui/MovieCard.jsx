@@ -1,27 +1,26 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 const MovieCard = ({ movie, isLoading = false }) => {
   if (isLoading) {
     return (
-      <div className="overflow-hidden rounded-xl border border-zinc-200">
+      <div className="overflow-hidden rounded-xl border border-border">
         <div className="relative overflow-hidden">
           <Skeleton className="w-full aspect-[2/3] rounded-none" />
-          <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-muted/40 to-transparent" />
         </div>
 
         <div className="p-3 space-y-2">
           <div className="relative overflow-hidden rounded">
             <Skeleton className="h-4 w-20" />
-            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-muted/40 to-transparent" />
           </div>
 
           <div className="relative overflow-hidden rounded">
             <Skeleton className="h-4 w-3/4" />
-            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-muted/40 to-transparent" />
           </div>
         </div>
       </div>
@@ -37,7 +36,7 @@ const MovieCard = ({ movie, isLoading = false }) => {
   return (
     <Link
       href={`/pages/${movie.id}`}
-      className="group overflow-hidden rounded-xl border border-zinc-200 bg-white hover:shadow-sm transition"
+      className="group overflow-hidden rounded-xl border border-border bg-card hover:shadow-sm transition text-card-foreground"
     >
       <figure className="overflow-hidden">
         {poster ? (
@@ -48,18 +47,18 @@ const MovieCard = ({ movie, isLoading = false }) => {
             className="w-full object-cover aspect-[2/3]"
           />
         ) : (
-          <div className="aspect-[2/3] w-full bg-zinc-100 flex items-center justify-center text-zinc-400 text-sm">
+          <div className="aspect-[2/3] w-full bg-muted flex items-center justify-center text-muted-foreground text-sm">
             No poster
           </div>
         )}
       </figure>
 
       <div className="p-3">
-        <p className="text-sm text-zinc-700">
+        <p className="text-sm text-foreground">
           ⭐ {movie?.vote_average?.toFixed(1) ?? "--"}{" "}
-          <span className="text-zinc-400">/ 10</span>
+          <span className="text-muted-foreground">/ 10</span>
         </p>
-        <p className="mt-1 text-sm font-semibold text-zinc-900 truncate">
+        <p className="mt-1 text-sm font-semibold text-foreground truncate">
           {title}
         </p>
       </div>

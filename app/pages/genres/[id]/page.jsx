@@ -1,13 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
+import GenreChips from "../../../../components/ui/GenreChips";
 import MovieGrid from "../../../../components/ui/MovieGrid";
 import Pager from "../../../../components/ui/Pager";
-import GenreChips from "../../../../components/ui/GenreChips";
-
-import Link from "next/link";
+import Footer from "../../../components/Footer";
+import Header from "../../../components/Header";
 
 import axios from "axios";
 import { useParams } from "next/navigation";
@@ -82,24 +80,24 @@ export default function Page() {
 
   const activeGenre = genres.find((g) => String(g.id) === String(id));
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
       <main className="flex-1">
         <div className="mx-auto max-w-[1280px] px-4 py-8">
           <div>
             <div className="px-6 pt-6">
-              <h2 className="text-[30px] font-semibold text-zinc-900">
+              <h2 className="text-[30px] font-semibold text-foreground">
                 Search filter
               </h2>
             </div>
 
             <div className="mt-4 grid grid-cols-1 md:grid-cols-[360px_1fr]">
-              <aside className="px-6 pb-6 md:border-r md:border-zinc-200">
-                <h3 className="text-base font-semibold text-zinc-900">
+              <aside className="px-6 pb-6 md:border-r md:border-border">
+                <h3 className="text-base font-semibold text-foreground">
                   Genres
                 </h3>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-muted-foreground">
                   See lists of movies by genre
                 </p>
 
@@ -116,14 +114,14 @@ export default function Page() {
               </aside>
 
               <section className="px-6 pb-6">
-                <h1 className="text-lg font-semibold text-zinc-900">
+                <h1 className="text-lg font-semibold text-foreground">
                   {activeGenre?.name
                     ? `${movies.length} titles in "${activeGenre.name}"`
                     : "Movies"}
                 </h1>
 
                 {moviesError && (
-                  <p className="mt-2 text-sm text-red-500">{moviesError}</p>
+                  <p className="mt-2 text-sm text-destructive">{moviesError}</p>
                 )}
 
                 <div className="mt-4">

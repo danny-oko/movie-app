@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
@@ -42,12 +42,12 @@ const Page = () => {
   }, []);
 
   return (
-    <section className="bg-white">
+    <section className="bg-background">
       <div className="mx-auto max-w-6xl px-6 py-10">
         {error && <p>{Error}</p>}
 
         <aside className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-zinc-900">Top Rated</h3>
+          <h3 className="text-2xl font-semibold text-foreground">Top Rated</h3>
           <Button variant="seeMore">
             <Link href={"/pages/top-rated"}>See more →</Link>
           </Button>

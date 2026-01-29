@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import MovieGridSimiliar from "./MovieGridSimiliar";
-import { Button } from "../ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import React from "react";
+import { Button } from "../ui/button";
 import GenreChips from "./GenreChips";
+import MovieGridSimiliar from "./MovieGridSimiliar";
 
 const MovieDetails = ({
   movie = null,
@@ -42,13 +42,15 @@ const MovieDetails = ({
     : null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
         <div className="flex items-start justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold">{movie.original_title}</h1>
+            <h1 className="text-4xl font-extrabold text-foreground">
+              {movie.original_title}
+            </h1>
 
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-zinc-600">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
               <span>{movie.release_date}</span>
               <span>•</span>
               <span>PG</span>
@@ -60,15 +62,15 @@ const MovieDetails = ({
           </div>
 
           <div className="text-right">
-            <p className="text-xs font-medium text-zinc-500">Rating</p>
+            <p className="text-xs font-medium text-muted-foreground">Rating</p>
             <div className="mt-1 flex items-center justify-end gap-2">
               <span className="text-lg">⭐</span>
-              <span className="text-xl font-semibold">
+              <span className="text-xl font-semibold text-foreground">
                 {movie.vote_average ? movie.vote_average.toFixed(1) : "--"}
               </span>
-              <span className="text-sm text-zinc-500">/10</span>
+              <span className="text-sm text-muted-foreground">/10</span>
             </div>
-            <p className="mt-1 text-xs text-zinc-500">
+            <p className="mt-1 text-xs text-muted-foreground">
               {movie.vote_count} votes
             </p>
           </div>
@@ -82,7 +84,7 @@ const MovieDetails = ({
               className="h-[428px] w-[290px] rounded-xl object-cover"
             />
           ) : (
-            <div className="h-[428px] w-[290px] rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-500">
+            <div className="h-[428px] w-[290px] rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
               No poster
             </div>
           )}
@@ -97,7 +99,7 @@ const MovieDetails = ({
                 allowFullScreen
               />
             ) : (
-              <div className="flex h-[428px] w-full items-center justify-center bg-zinc-100 text-zinc-500">
+              <div className="flex h-[428px] w-full items-center justify-center bg-muted text-muted-foreground">
                 No trailer available
               </div>
             )}
@@ -113,7 +115,7 @@ const MovieDetails = ({
           />
         </div>
 
-        <p className="mt-4 max-w-5xl text-sm leading-6 text-zinc-700">
+        <p className="mt-4 max-w-5xl text-sm leading-6 text-foreground">
           {movie.overview}
         </p>
 
@@ -137,7 +139,9 @@ const MovieDetails = ({
 
         <div className="mt-10">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">More like this</h2>
+            <h2 className="text-lg font-semibold text-foreground">
+              More like this
+            </h2>
             <Button
               variant="seeMore"
               onClick={() => pushToSimilarMoviePage(id)}
@@ -158,8 +162,8 @@ const MovieDetails = ({
 function CreditRow({ label, values = [] }) {
   return (
     <div className="grid grid-cols-[180px_1fr] items-center py-6">
-      <p className="text-md font-bold text-zinc-900">{label}</p>
-      <p className="text-md text-zinc-800">
+      <p className="text-md font-bold text-foreground">{label}</p>
+      <p className="text-md text-foreground">
         {values.length ? values.join(" · ") : "--"}
       </p>
     </div>
@@ -167,12 +171,12 @@ function CreditRow({ label, values = [] }) {
 }
 
 function Divider() {
-  return <div className="h-px w-full bg-zinc-200" />;
+  return <div className="h-px w-full bg-border" />;
 }
 
 function MovieDetailsSkeleton() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
         <div className="flex items-start justify-between gap-6">
           <div className="space-y-3">

@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
-import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
-import MovieGrid from "../../../components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
+import MovieGrid from "../../../components/ui/MovieGrid";
 
 import Pager from "../../../components/ui/Pager";
 
@@ -48,15 +48,15 @@ const Page = () => {
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-none flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          {error && <p>{error}</p>}
+          {error && <p className="text-destructive">{error}</p>}
 
           <aside className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold text-zinc-900">Popular</h3>
+            <h3 className="text-2xl font-semibold text-foreground">Popular</h3>
             <Button variant="seeMore">
               <Link href={"/"}>← Return to home page</Link>
             </Button>

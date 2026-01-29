@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 
 import MovieDetails from "../../../components/ui/MovieDetails";
-import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
-import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Page() {
   const { id } = useParams();
@@ -78,10 +78,10 @@ export default function Page() {
   }, [id]);
 
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       <Header />
 
-      {error && <p>{error}</p>}
+      {error && <p className="text-destructive">{error}</p>}
 
       <MovieDetails
         id={id}
