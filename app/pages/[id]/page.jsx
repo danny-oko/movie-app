@@ -18,7 +18,7 @@ export default function Page() {
   const [details, setDetails] = useState([]);
   const [similiar, setSimiliar] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [genresCount, setGenresCount] = useState();
   const [video, setVideo] = useState([]);
   const [error, setError] = useState(null);
 
@@ -45,6 +45,7 @@ export default function Page() {
       try {
         const res = await axios.get(`/api/tmdb/movies/${id}/details`);
         setDetails(res.data ?? []);
+        setGenresCount(res?.data?.genres?.length);
       } catch (e) {
         setError(e);
         setDetails([]);
@@ -68,7 +69,6 @@ export default function Page() {
       try {
         const res = await axios.get(`/api/tmdb/movies/${id}/similiar`);
         setSimiliar(res.data.results ?? []);
-        console.log(res.data.results);
       } catch (err) {
         setError(err);
         setSimiliar([]);
@@ -92,6 +92,7 @@ export default function Page() {
         trailer={video}
         pushToSimilarMoviePage={pushToSimilarMoviePage}
         isLoading={loading}
+        // genresCount={genresCount}
       />
 
       <Footer />

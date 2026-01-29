@@ -4,6 +4,7 @@ import React from "react";
 import MovieGridSimiliar from "./MovieGridSimiliar";
 import { Button } from "../ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import GenreChips from "./GenreChips";
 
 const MovieDetails = ({
   movie = null,
@@ -104,14 +105,12 @@ const MovieDetails = ({
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
-          {genres.map((g) => (
-            <span
-              key={g.id}
-              className="rounded-full border border-zinc-200 px-3 py-1 text-xs font-medium text-zinc-700"
-            >
-              {g.name}
-            </span>
-          ))}
+          <GenreChips
+            genres={genres}
+            activeId={id}
+            isLoading={loading}
+            baseHref="/pages/genres"
+          />
         </div>
 
         <p className="mt-4 max-w-5xl text-sm leading-6 text-zinc-700">

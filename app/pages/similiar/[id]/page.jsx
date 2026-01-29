@@ -10,6 +10,7 @@ import Footer from "../../../components/Footer";
 import MovieGrid from "../../../../components/ui/MovieGrid";
 import Pager from "../../../../components/ui/Pager";
 
+
 export default function Page() {
   const { id } = useParams();
 
