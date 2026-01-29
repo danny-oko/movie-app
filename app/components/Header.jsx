@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 import { ModeToggle } from "@/components/ModeToggle";
 import Modal from "./Modal";
@@ -72,7 +72,16 @@ const Header = () => {
           </button>
 
           <div className="w-full min-w-0 max-w-[180px] sm:max-w-[260px] md:max-w-[340px] lg:max-w-[380px]">
-            <Input />
+            <Suspense
+              fallback={
+                <div
+                  className="h-9 w-full min-w-0 rounded-lg border border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800"
+                  aria-hidden
+                />
+              }
+            >
+              <Input />
+            </Suspense>
           </div>
 
           {open && (
