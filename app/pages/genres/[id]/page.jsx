@@ -23,8 +23,6 @@ export default function Page() {
   const [loadingGenres, setLoadingGenres] = useState(true);
   const [loadingMovies, setLoadingMovies] = useState(true);
 
-  // console.log(loadingGenres, loadingMovies);
-
   useEffect(() => {
     const controller = new AbortController();
 
@@ -84,16 +82,16 @@ export default function Page() {
       <Header />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-[1280px] px-4 py-8">
+        <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-8">
           <div>
-            <div className="px-6 pt-6">
-              <h2 className="text-[30px] font-semibold text-foreground">
+            <div className="px-2 sm:px-6 pt-4 sm:pt-6">
+              <h2 className="text-xl font-semibold text-foreground sm:text-2xl md:text-[30px]">
                 Search filter
               </h2>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-[360px_1fr]">
-              <aside className="px-6 pb-6 md:border-r md:border-border">
+            <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
+              <aside className="px-2 pb-4 sm:px-6 sm:pb-6 md:border-r md:border-border">
                 <h3 className="text-base font-semibold text-foreground">
                   Genres
                 </h3>
@@ -113,8 +111,8 @@ export default function Page() {
                 </div>
               </aside>
 
-              <section className="px-6 pb-6">
-                <h1 className="text-lg font-semibold text-foreground">
+              <section className="px-2 pb-6 sm:px-6">
+                <h1 className="text-base font-semibold text-foreground sm:text-lg">
                   {activeGenre?.name
                     ? `${movies.length} titles in "${activeGenre.name}"`
                     : "Movies"}

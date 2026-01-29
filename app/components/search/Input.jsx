@@ -42,7 +42,7 @@ export default function Input() {
       <input
         placeholder="Search movie..."
         onChange={onChange}
-        className="h-9 w-[260px] sm:w-[340px] md:w-[380px] rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+        className="h-9 w-full min-w-0 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none"
       />
       {movies.length > 0 && (
         <div className="absolute left-0 top-full z-50 mt-1 max-h-[280px] w-full overflow-auto rounded-lg border border-border bg-popover py-2 shadow-lg">

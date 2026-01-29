@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
+import { ModeToggle } from "@/components/ModeToggle";
 import Modal from "./Modal";
-import { ModeToggle } from "@/components/ModeToggle"; 
 import Input from "./search/Input";
 
 const Header = () => {
@@ -46,37 +46,34 @@ const Header = () => {
 
   return (
     <header className="w-full border-b border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800">
-      <div className="mx-auto flex h-[60px] w-full items-center justify-between px-32">
+      <div className="mx-auto flex h-14 min-h-14 w-full max-w-[1920px] flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:gap-3 md:px-8 lg:px-12 xl:px-32">
         <h1
           onClick={handleHome}
-          className="text-lg font-extrabold text-zinc-900 dark:text-zinc-100 cursor-pointer"
+          className="text-base font-extrabold text-zinc-900 dark:text-zinc-100 cursor-pointer shrink-0 sm:text-lg"
         >
           🎥 Movie Z
         </h1>
 
-        <div className="relative flex items-center gap-2" ref={wrapperRef}>
+        <div
+          className="relative flex flex-1 min-w-0 max-w-full items-center justify-end gap-2 sm:flex-initial sm:max-w-none"
+          ref={wrapperRef}
+        >
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="h-9 min-w-[120px] select-none rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-800 flex items-center justify-between gap-2
-                       dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100"
+            className="h-9 min-w-0 w-20 sm:min-w-[120px] select-none rounded-lg border border-zinc-200 bg-white px-2 sm:px-3 text-xs sm:text-sm text-zinc-800 flex items-center justify-between gap-1 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100"
           >
             <span className="truncate">{selectedGenre}</span>
             <span
-              className={`text-base transition ${open ? "rotate-180" : ""}`}
+              className={`text-base transition shrink-0 ${open ? "rotate-180" : ""}`}
             >
               ▾
             </span>
           </button>
 
-          <Input />
-
-          {/* <input
-            type="search"
-            placeholder="🔎︎ Search"
-            className="h-9 w-[260px] sm:w-[340px] md:w-[380px] rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none
-                 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-          /> */}
+          <div className="w-full min-w-0 max-w-[180px] sm:max-w-[260px] md:max-w-[340px] lg:max-w-[380px]">
+            <Input />
+          </div>
 
           {open && (
             <Modal
@@ -89,7 +86,9 @@ const Header = () => {
           )}
         </div>
 
-        <ModeToggle />
+        <div className="shrink-0">
+          <ModeToggle />
+        </div>
       </div>
     </header>
   );

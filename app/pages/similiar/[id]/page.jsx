@@ -54,19 +54,21 @@ export default function Page() {
       <Header />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-foreground">Similiar</h1>
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
+          <div className="flex flex-row items-center justify-between gap-4">
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">
+              Similiar
+            </h1>
 
             <Link
               href="/"
-              className="text-sm text-foreground hover:text-foreground/90 cursor-pointer"
+              className="text-sm text-foreground hover:text-foreground/90 cursor-pointer w-fit touch-manipulation"
             >
               Return to home page
             </Link>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-4 sm:mt-5">
             <MovieGrid movies={movies} isLoading={loading} />
 
             {error && <p className="mt-4 text-destructive">{error}</p>}

@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useMemo } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -10,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import React, { useMemo } from "react";
 
 export default function Pager({
   page,
@@ -49,10 +49,10 @@ export default function Pager({
 
   return (
     <div
-      className={`pb-12 flex flex-col gap-6 ${disabled ? "opacity-60 pointer-events-none" : ""}`}
+      className={`pb-8 sm:pb-12 flex flex-col gap-4 sm:gap-6 px-2 sm:px-0 ${disabled ? "opacity-60 pointer-events-none" : ""}`}
     >
       <Pagination>
-        <PaginationContent>
+        <PaginationContent className="flex-wrap justify-center gap-1 sm:gap-2">
           <PaginationItem>
             <PaginationPrevious
               href="#"

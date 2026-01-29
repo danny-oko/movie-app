@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import MovieGrid from "../../../components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
+import MovieGrid from "../../../components/ui/MovieGrid";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
 import Pager from "../../../components/ui/Pager";
 
@@ -22,7 +22,7 @@ const Page = () => {
     const controller = new AbortController();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
-      
+
     const run = async () => {
       try {
         setLoading(true);
@@ -52,17 +52,19 @@ const Page = () => {
       <Header />
 
       <main className="flex-1 flex flex-col items-center justify-center">
-        <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
           {error && <p className="text-destructive">{error}</p>}
 
-          <aside className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold text-foreground">Upcoming</h3>
-            <Button variant="seeMore">
+          <aside className="flex flex-row items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+              Upcoming
+            </h3>
+            <Button variant="seeMore" className="w-fit touch-manipulation">
               <Link href={"/"}>← Return to home page</Link>
             </Button>
           </aside>
 
-          <div className="mt-5">
+          <div className="mt-4 sm:mt-5">
             <MovieGrid movies={movies} isLoading={loading} />
           </div>
         </div>

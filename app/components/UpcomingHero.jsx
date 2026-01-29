@@ -30,7 +30,6 @@ function UpcomingHeroSkeleton() {
         <Skeleton className="h-4 w-28 bg-white/20" />
         <Skeleton className="h-10 w-[420px] bg-white/20 max-md:w-[260px]" />
         <Skeleton className="h-4 w-32 bg-white/20" />
-        
 
         <div className="space-y-2">
           <Skeleton className="h-3 w-full bg-white/20" />

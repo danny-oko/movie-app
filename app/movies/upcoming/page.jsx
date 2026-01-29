@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
-
 
 const Page = ({ movies }) => {
   const [movieList, setMovieList] = useState([]);
@@ -36,17 +35,19 @@ const Page = ({ movies }) => {
 
   return (
     <section className="bg-background">
-      <div className="mx-auto max-w-6xl px-6 py-10">
-        {error && <p>{Error}</p>}
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+        {error && <p className="text-destructive">{error}</p>}
 
-        <aside className="flex items-center justify-between">
-          <h3 className="text-2xl font-semibold text-foreground">Upcoming</h3>
-          <Button variant="seeMore">
+        <aside className="flex flex-row items-center justify-between gap-4">
+          <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+            Upcoming
+          </h3>
+          <Button variant="seeMore" className="w-fit touch-manipulation">
             <Link href={"/pages/upcoming"}>See more →</Link>
           </Button>
         </aside>
 
-        <div className="mt-5">
+        <div className="mt-4 sm:mt-5">
           <MovieGrid movies={movieList} isLoading={loading} />
         </div>
       </div>

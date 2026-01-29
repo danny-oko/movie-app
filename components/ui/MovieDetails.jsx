@@ -43,14 +43,14 @@ const MovieDetails = ({
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-        <div className="flex items-start justify-between gap-6">
-          <div>
-            <h1 className="text-4xl font-extrabold text-foreground">
+      <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-12">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-extrabold text-foreground leading-tight sm:text-3xl md:text-4xl">
               {movie.original_title}
             </h1>
 
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground">
               <span>{movie.release_date}</span>
               <span>•</span>
               <span>PG</span>
@@ -61,45 +61,47 @@ const MovieDetails = ({
             </div>
           </div>
 
-          <div className="text-right">
+          <div className="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-0 sm:text-right shrink-0">
             <p className="text-xs font-medium text-muted-foreground">Rating</p>
-            <div className="mt-1 flex items-center justify-end gap-2">
-              <span className="text-lg">⭐</span>
-              <span className="text-xl font-semibold text-foreground">
+            <div className="flex items-center gap-2 sm:mt-1 sm:justify-end">
+              <span className="text-base sm:text-lg">⭐</span>
+              <span className="text-lg font-semibold text-foreground sm:text-xl">
                 {movie.vote_average ? movie.vote_average.toFixed(1) : "--"}
               </span>
-              <span className="text-sm text-muted-foreground">/10</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">
+                /10
+              </span>
             </div>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground sm:mt-1">
               {movie.vote_count} votes
             </p>
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[290px_1fr]">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(200px,290px)_1fr]">
           {posterUrl ? (
             <img
               src={posterUrl}
               alt={movie?.original_title || "Poster"}
-              className="h-[428px] w-[290px] rounded-xl object-cover"
+              className="w-full max-w-[290px] mx-auto lg:mx-0 aspect-2/3 object-cover rounded-xl"
             />
           ) : (
-            <div className="h-[428px] w-[290px] rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
+            <div className="w-full max-w-[290px] mx-auto lg:mx-0 aspect-2/3 rounded-xl bg-muted flex items-center justify-center text-muted-foreground text-sm">
               No poster
             </div>
           )}
 
-          <div className="overflow-hidden rounded-xl">
+          <div className="overflow-hidden rounded-xl min-h-[200px] sm:min-h-[320px] md:min-h-[428px]">
             {trailerKey ? (
               <iframe
                 src={`https://www.youtube.com/embed/${trailerKey}`}
                 title="YouTube trailer"
-                className="h-[428px] w-full"
+                className="w-full aspect-video min-h-[200px] sm:min-h-[320px] md:h-[428px] md:min-h-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />
             ) : (
-              <div className="flex h-[428px] w-full items-center justify-center bg-muted text-muted-foreground">
+              <div className="flex min-h-[200px] sm:min-h-[320px] md:min-h-[428px] w-full items-center justify-center bg-muted text-muted-foreground text-sm">
                 No trailer available
               </div>
             )}
@@ -119,7 +121,7 @@ const MovieDetails = ({
           {movie.overview}
         </p>
 
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           <CreditRow
             label="Director"
             values={director.slice(0, 2).map((d) => d.name)}
@@ -137,20 +139,21 @@ const MovieDetails = ({
           <Divider />
         </div>
 
-        <div className="mt-10">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-foreground">
+        <div className="mt-8 sm:mt-10">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-base sm:text-lg font-semibold text-foreground">
               More like this
             </h2>
             <Button
               variant="seeMore"
+              className="touch-manipulation w-fit"
               onClick={() => pushToSimilarMoviePage(id)}
             >
               More like this →
             </Button>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-4 sm:mt-5">
             <MovieGridSimiliar movies={similiarData} />
           </div>
         </div>
@@ -161,9 +164,9 @@ const MovieDetails = ({
 
 function CreditRow({ label, values = [] }) {
   return (
-    <div className="grid grid-cols-[180px_1fr] items-center py-6">
-      <p className="text-md font-bold text-foreground">{label}</p>
-      <p className="text-md text-foreground">
+    <div className="grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,180px)_1fr] sm:gap-0 sm:items-center py-4 sm:py-6">
+      <p className="text-sm sm:text-base font-bold text-foreground">{label}</p>
+      <p className="text-sm sm:text-base text-foreground break-words">
         {values.length ? values.join(" · ") : "--"}
       </p>
     </div>
@@ -177,22 +180,22 @@ function Divider() {
 function MovieDetailsSkeleton() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-        <div className="flex items-start justify-between gap-6">
-          <div className="space-y-3">
-            <Skeleton className="h-10 w-[360px]" />
-            <Skeleton className="h-4 w-[260px]" />
+      <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-12">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+          <div className="space-y-3 min-w-0 flex-1">
+            <Skeleton className="h-8 w-full max-w-[360px] sm:h-10" />
+            <Skeleton className="h-4 w-full max-w-[260px]" />
           </div>
-          <div className="text-right space-y-2">
-            <Skeleton className="h-3 w-20 ml-auto" />
-            <Skeleton className="h-8 w-24 ml-auto" />
-            <Skeleton className="h-3 w-28 ml-auto" />
+          <div className="flex gap-4 sm:flex-col sm:items-end sm:gap-2">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-3 w-28" />
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[290px_1fr]">
-          <Skeleton className="h-[428px] w-[290px] rounded-xl" />
-          <Skeleton className="h-[428px] w-full rounded-xl" />
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(200px,290px)_1fr]">
+          <Skeleton className="w-full max-w-[290px] mx-auto aspect-2/3 rounded-xl lg:mx-0" />
+          <Skeleton className="w-full aspect-video sm:min-h-[320px] md:h-[428px] rounded-xl" />
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
@@ -207,25 +210,25 @@ function MovieDetailsSkeleton() {
           <Skeleton className="h-4 w-10/12" />
         </div>
 
-        <div className="mt-8 space-y-6">
+        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i}>
-              <div className="grid grid-cols-[180px_1fr] items-center py-6">
+              <div className="grid grid-cols-1 gap-1 sm:grid-cols-[180px_1fr] sm:items-center sm:gap-0 py-4 sm:py-6">
                 <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-72" />
+                <Skeleton className="h-4 w-full max-w-[280px] sm:max-w-[18rem]" />
               </div>
               <Divider />
             </div>
           ))}
         </div>
 
-        <div className="mt-10">
-          <div className="flex items-center justify-between">
+        <div className="mt-8 sm:mt-10">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <Skeleton className="h-6 w-40" />
             <Skeleton className="h-9 w-36 rounded-md" />
           </div>
 
-          <div className="mt-5">
+          <div className="mt-4 sm:mt-5">
             <MovieGridSimiliar isLoading />
           </div>
         </div>

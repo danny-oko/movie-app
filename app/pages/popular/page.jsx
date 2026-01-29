@@ -52,17 +52,19 @@ const Page = () => {
       <Header />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
           {error && <p className="text-destructive">{error}</p>}
 
-          <aside className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold text-foreground">Popular</h3>
-            <Button variant="seeMore">
+          <aside className="flex flex-row items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+              Popular
+            </h3>
+            <Button variant="seeMore" className="w-fit touch-manipulation">
               <Link href={"/"}>← Return to home page</Link>
             </Button>
           </aside>
 
-          <div className="mt-5">
+          <div className="mt-4 sm:mt-5">
             <MovieGrid movies={movies} isLoading={loading} />
           </div>
         </div>

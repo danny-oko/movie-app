@@ -78,10 +78,10 @@ export default function Page() {
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
 
-      {error && <p className="text-destructive">{error}</p>}
+      {error && <p className="text-destructive px-4 sm:px-6">{error}</p>}
 
       <MovieDetails
         id={id}
