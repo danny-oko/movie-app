@@ -2,7 +2,8 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
-  const searchValue = (params?.searchValue || "").trim();
+  console.log("hshsh");
+  const searchValue = (params?.query || "").trim();
 
   const { searchParams } = new URL(req.url);
   const page = Math.max(1, Number(searchParams.get("page") || 1));
@@ -26,7 +27,7 @@ export async function GET(req, { params }) {
     const q = encodeURIComponent(searchValue);
 
     const { data } = await axios.get(
-      `https://api.themoviedb.org/3/search/movie?query=${q}&language=en-US&page=${page}`,
+      `https://api.themoviedb.org/3/search/movie?query=${q}&language=en-US`,
       {
         headers: {
           accept: "application/json",

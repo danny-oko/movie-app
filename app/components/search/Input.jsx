@@ -1,61 +1,53 @@
 "use client";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import debounce from "lodash.debounce";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
 
-export default function Input() {
-  const { searchValue } = useSearchParams();
-
-  const [query, setQuery] = useState("");
+const Input = () => {
+  const [error, setError] = useState(null);
   const [movies, setMovies] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [page, setPage] = useState(1);
 
-  const onChange = useMemo(
-    () => debounce((e) => setQuery(e.target.value), 300),
+  const handleDebounceChange = useMemo(
+    () => debounce((value) => setInputValue(value), 300),
     [],
   );
 
-  useEffect(() => () => onChange.cancel(), [onChange]);
+  useEffect(() => () => handleDebounceChange.cancel(), [handleDebounceChange]);
 
   useEffect(() => {
-    if (!query.trim()) {
+    const query = inputValue.trim();
+    if (!query) {
       setMovies([]);
       return;
     }
 
-    const controller = new AbortController();
+    const getMovies = async () => {
+      try {
+        const res = await axios.get(
+          `/api/tmdb/${encodeURIComponent(query)}/search`,
+          { params: { page } },
+        );
+        setMovies(res?.data?.results ?? []);
+      } catch (e) {
+        setError(e.message);
+      }
+    };
 
-    axios
-      .get(`/api/tmdb/${encodeURIComponent(query)}/search-movie`, {
-        params: { page: 1 },
-        signal: controller.signal,
-      })
-      .then((res) => console.log(res.data.results.original_title))
-      .then((res) => setMovies(res?.data?.results ?? []))
-      .catch(() => {});
-
-    return () => controller.abort();
-  }, [query]);
+    getMovies();
+  }, [inputValue, page]);
 
   return (
-    <div className="relative">
+    <div>
       <input
-        placeholder="Search movie..."
-        onChange={onChange}
-        className="h-9 w-full min-w-0 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+        type="text"
+        value={inputValue}
+        onChange={(e) => handleDebounceChange(e.target.value)}
+        className="w-[260px] p-2 border rounded-lg"
       />
-      {movies.length > 0 && (
-        <div className="absolute left-0 top-full z-50 mt-1 max-h-[280px] w-full overflow-auto rounded-lg border border-border bg-popover py-2 shadow-lg">
-          {movies.map((m) => (
-            <p
-              key={m.id}
-              className="px-3 py-2 text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground"
-            >
-              {m.title || m.original_title}
-            </p>
-          ))}
-        </div>
-      )}
     </div>
   );
-}
+};
+
+export default Input;
