@@ -23,11 +23,11 @@ const page = () => {
   return (
     <>
       <Header />
-      {/* <UpcomingHero /> */}
-      {/* <Upcoming /> */}
-      {/* <Popular /> */}
-      {/* <Top /> */}
-      {/* <Footer /> */}
+      <UpcomingHero />
+      <Upcoming />
+      <Popular />
+      <Top />
+      <Footer />
     </>
   );
 };
