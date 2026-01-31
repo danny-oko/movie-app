@@ -8,42 +8,31 @@ const Input = () => {
   const [movies, setMovies] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleDebounceChange = useMemo(
-    () => debounce((value) => setInputValue(value), 300),
-    [],
-  );
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
-  useEffect(() => () => handleDebounceChange.cancel(), [handleDebounceChange]);
+  const deboucedValue = (event) => {
+    const debouncedVal = debounce(handleChange, 300);
+    setSearchTerm(debouncedVal);
+  };
 
   useEffect(() => {
     const query = inputValue.trim();
     if (!query) {
-      setMovies([]);
+      // setMovies([]);
       return;
     }
-
-    const getMovies = async () => {
-      try {
-        const res = await axios.get(
-          `/api/tmdb/${encodeURIComponent(query)}/search`,
-          { params: { page } },
-        );
-        setMovies(res?.data?.results ?? []);
-      } catch (e) {
-        setError(e.message);
-      }
-    };
-
-    getMovies();
-  }, [inputValue, page]);
+  });
 
   return (
     <div>
       <input
         type="text"
         value={inputValue}
-        onChange={(e) => handleDebounceChange(e.target.value)}
+        onChange={handleChange}
         className="w-[260px] p-2 border rounded-lg"
       />
     </div>
