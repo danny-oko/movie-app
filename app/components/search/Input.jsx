@@ -11,29 +11,35 @@ const Input = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (e) => {
+    console.log(e.target.value);
     setInputValue(e.target.value);
   };
 
-  const deboucedValue = (event) => {
-    const debouncedVal = debounce(handleChange, 300);
-    setSearchTerm(debouncedVal);
-  };
-
-  useEffect(() => {
-    const query = inputValue.trim();
-    if (!query) {
-      // setMovies([]);
-      return;
-    }
+  const debouncedVal = useMemo(() => {
+    // const debounced = debounce(inputValue, 300);
+    // console.log(debounced);
+    // setSearchTerm(debounced);
   });
+
+  //   const debouncedVal = debounce(handleChange, 300);
+  //   setSearchTerm(debouncedVal);
+  // };
+
+  // useEffect(() => {
+  //   const query = inputValue.trim();
+  //   if (!query) {
+  //     // setMovies([]);
+  //     return;
+  //   }
+  // });
 
   return (
     <div>
       <input
         type="text"
-        value={inputValue}
-        onChange={handleChange}
         className="w-[260px] p-2 border rounded-lg"
+        onChange={handleChange}
+        value={debouncedVal}
       />
     </div>
   );
