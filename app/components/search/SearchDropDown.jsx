@@ -62,6 +62,7 @@ export default function SearchDropdown({
   );
 }
 
+
 function ResultRow({ movie, onClose }) {
   const imgBaseUrl = "https://image.tmdb.org/t/p/w92";
   const title = movie?.title || movie?.original_title || "Untitled";
