@@ -13,10 +13,10 @@ const page = () => {
     url: "https://api.themoviedb.org/3/account/22627464",
     headers: {
       accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYjRhZTgxN2Y1MTQ4ZTkyMDIzMWM1OTBmNTZjZWE1YyIsIm5iZiI6MTc2NzY4ODIyMi4wNzksInN1YiI6IjY5NWNjODFlODI2NmNmOGUyMWRjMmM4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CefpI5lXcMjzRN2Zm-Ap3g5nGh8x2swrJ4Y1MME_HzM",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN}`,
     },
   };
+
 
   axios.request(options).catch((err) => console.error(err));
 

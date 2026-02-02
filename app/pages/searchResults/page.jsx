@@ -12,6 +12,7 @@ import Pager from "../../../components/ui/Pager";
 const LS_KEY = "search_term";
 
 export default function SearchResultsPage() {
+
   const [storedQuery, setStoredQuery] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
@@ -59,6 +60,7 @@ export default function SearchResultsPage() {
       try {
         setLoadingSearch(true);
         setSearchError(null);
+        console.log(storedQuery);
 
         const res = await axios.get(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
@@ -67,11 +69,12 @@ export default function SearchResultsPage() {
           {
             headers: {
               accept: "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYjRhZTgxN2Y1MTQ4ZTkyMDIzMWM1OTBmNTZjZWE1YyIsIm5iZiI6MTc2NzY4ODIyMi4wNzksInN1YiI6IjY5NWNjODFlODI2NmNmOGUyMWRjMmM4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CefpI5lXcMjzRN2Zm-Ap3g5nGh8x2swrJ4Y1MME_HzM`,
+              Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
             },
             signal: controller.signal,
           },
         );
+
 
         const results = res?.data?.results ?? [];
         setSearchedMovies(results);
@@ -88,7 +91,7 @@ export default function SearchResultsPage() {
 
     return () => controller.abort();
   }, [storedQuery, page, hydrated]);
-
+console.log(process.env.TMDB_TOKEN, "Search page");
   useEffect(() => {
     const controller = new AbortController();
 

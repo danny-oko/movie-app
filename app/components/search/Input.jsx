@@ -5,7 +5,11 @@ import axios from "axios";
 import debounce from "lodash.debounce";
 import SearchDropdown from "./SearchDropDown";
 
+
+
 const LS_KEY = "search_term";
+
+
 
 export default function Input() {
   const [text, setText] = useState("");
@@ -44,6 +48,7 @@ export default function Input() {
 
   useEffect(() => () => debouncedSetQuery.cancel(), [debouncedSetQuery]);
 
+
   useEffect(() => {
     const onDown = (e) => {
       if (!wrapRef.current) return;
@@ -78,6 +83,7 @@ export default function Input() {
         setEmpty(null);
         setError(null);
 
+
         const res = await axios.get(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
             query,
@@ -85,7 +91,7 @@ export default function Input() {
           {
             headers: {
               accept: "application/json",
-              Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN}`,
             },
             signal: controller.signal,
           },
