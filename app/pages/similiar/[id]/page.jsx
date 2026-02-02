@@ -60,12 +60,7 @@ export default function Page() {
               Similiar
             </h1>
 
-            <Link
-              href="/"
-              className="text-sm text-foreground hover:text-foreground/90 cursor-pointer w-fit touch-manipulation"
-            >
-              Return to home page
-            </Link>
+            <Link href={"/"} className="text-sm">← Return to home page</Link>
           </div>
 
           <div className="mt-4 sm:mt-5">
