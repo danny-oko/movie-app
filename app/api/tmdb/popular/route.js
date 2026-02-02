@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(reqj) {
+export async function GET(req) {
   const token = process.env.TMDB_TOKEN;
   if (!token) {
     return NextResponse.json("Error: Missing Environment Variables", {
       status: 500,
-      
+
     });
   }
   const { searchParams } = new URL(req.url);
