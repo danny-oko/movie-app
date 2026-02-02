@@ -106,7 +106,10 @@ export default function Input() {
   };
 
   return (
-    <div ref={wrapRef} className="relative w-[380px] ">
+    <div
+      ref={wrapRef}
+      className="relative w-full sm:w-[250px] md:w-[370px] lg:w-[380px]"
+    >
       <div className="relative">
         <input
           type="text"
@@ -138,6 +141,7 @@ export default function Input() {
           empty={empty}
           error={error}
           onClose={() => setOpen(false)}
+          query={text}
         />
       )}
     </div>

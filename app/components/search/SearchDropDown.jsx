@@ -10,16 +10,27 @@ export default function SearchDropdown({
   empty,
   error,
   onClose,
+  query,
 }) {
   return (
     <div
-      className="absolute left-0 right-0 mt-2 z-50 rounded-xl border border-border bg-card shadow-lg overflow-hidden"
+      className="
+        absolute left-0 right-0 mt-2 z-50
+        overflow-hidden
+        border border-border bg-card shadow-lg
+        rounded-xl sm:rounded-2xl
+      "
       role="dialog"
       aria-label="Search results"
     >
-      <div className="max-h-[360px] overflow-y-auto">
+      <div
+        className="
+          max-h-[60vh] sm:max-h-[360px]
+          overflow-y-auto
+        "
+      >
         {loading ? (
-          <div className="p-2 space-y-2">
+          <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
             <RowSkeleton />
             <RowSkeleton />
             <RowSkeleton />
@@ -30,19 +41,19 @@ export default function SearchDropdown({
         ) : empty ? (
           <div className="p-3 text-sm text-muted-foreground">{empty}</div>
         ) : (
-          <div className="p-2 space-y-1">
+          <div className="p-2 sm:p-3 space-y-1 sm:space-y-2">
             {movies.slice(0, 8).map((m) => (
               <ResultRow key={m.id} movie={m} onClose={onClose} />
             ))}
 
             {movies.length > 8 ? (
-              <button
-                className="w-full mt-2 text-sm py-2 rounded-lg hover:bg-muted text-muted-foreground"
-                type="button"
+              <Link
+                href={`/pages/searchResults?query=${encodeURIComponent(query)}&page=1`}
                 onClick={onClose}
+                className="block w-full mt-2 text-sm py-2 sm:py-2.5 rounded-lg hover:bg-muted text-muted-foreground text-center"
               >
                 See all results
-              </button>
+              </Link>
             ) : null}
           </div>
         )}
@@ -68,26 +79,39 @@ function ResultRow({ movie, onClose }) {
     <Link
       href={`/pages/${movie.id}`}
       onClick={onClose}
-      className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition h-auto"
+      className="
+        flex items-center gap-2 sm:gap-3
+        p-2 sm:p-3
+        rounded-lg
+        hover:bg-muted transition
+      "
     >
-      <div className="w-10 h-14 rounded-md overflow-hidden bg-muted shrink-0">
+      <div
+        className="
+          shrink-0 overflow-hidden bg-muted
+          rounded-md sm:rounded-lg
+          w-9 h-12 sm:w-10 sm:h-14
+        "
+      >
         {poster ? (
           <img
             src={poster}
             alt={title}
             className="w-full h-full object-cover"
           />
-        ) : null}
+        ) : (
+          <div className="w-full h-full" />
+        )}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold truncate">{title}</p>
-        <p className="text-xs text-muted-foreground">
+        <p className="font-semibold truncate text-sm sm:text-base">{title}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground">
           ⭐ {rating} <span className="mx-2">•</span> {year}
         </p>
       </div>
 
-      <div className="text-xs text-muted-foreground hover:text-foreground">
+      <div className="hidden sm:block text-xs text-muted-foreground hover:text-foreground">
         See more →
       </div>
     </Link>
@@ -96,8 +120,8 @@ function ResultRow({ movie, onClose }) {
 
 function RowSkeleton() {
   return (
-    <div className="flex items-center gap-3 p-2">
-      <Skeleton className="w-10 h-14 rounded-md" />
+    <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3">
+      <Skeleton className="w-9 h-12 sm:w-10 sm:h-14 rounded-md sm:rounded-lg" />
       <div className="flex-1 space-y-2">
         <Skeleton className="h-4 w-3/4" />
         <Skeleton className="h-3 w-1/3" />

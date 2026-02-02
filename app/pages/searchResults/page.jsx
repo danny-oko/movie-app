@@ -1,0 +1,177 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+
+import MovieGrid from "../../../components/ui/MovieGrid";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import GenreChips from "../../../components/ui/GenreChips";
+import Pager from "../../../components/ui/Pager";
+
+export default function SearchResultsPage() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
+
+  const [page, setPage] = useState(1);
+
+  // SEARCH results
+  const [searchedMovies, setSearchedMovies] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [searchError, setSearchError] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+
+  // GENRES sidebar
+  const [genres, setGenres] = useState([]);
+  const [genresCount, setGenresCount] = useState(10);
+  const [genreError, setGenreError] = useState(null);
+  const [loadingGenres, setLoadingGenres] = useState(true);
+
+  // reset page when query changes (so new searches start from 1)
+  useEffect(() => {
+    setPage(1);
+  }, [query]);
+
+  // fetch searched movies
+  useEffect(() => {
+    if (!query.trim()) {
+      setSearchedMovies([]);
+      setSearchError(null);
+      setTotalPages(1);
+      setLoadingSearch(false);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        setLoadingSearch(true);
+        setSearchError(null);
+
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+            query,
+          )}&language=en-US&page=${page}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN}`,
+            },
+            signal: controller.signal,
+          },
+        );
+
+        const results = res?.data?.results ?? [];
+        setSearchedMovies(results);
+        setTotalPages(res?.data?.total_pages ?? 1);
+
+        if (results.length === 0) setSearchError("No results found");
+      } catch (e) {
+        if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
+        setSearchError(e?.message || "Failed to load search results");
+      } finally {
+        setLoadingSearch(false);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [query, page]);
+
+  // fetch genres
+  useEffect(() => {
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        setLoadingGenres(true);
+        setGenreError(null);
+
+        const res = await axios.get("/api/tmdb/genres", {
+          signal: controller.signal,
+        });
+
+        const list = res?.data?.genres ?? [];
+        setGenres(list);
+        setGenresCount(list.length || 10);
+      } catch (e) {
+        if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
+        setGenreError(e?.message || "Failed to load genres");
+      } finally {
+        setLoadingGenres(false);
+      }
+    })();
+
+    return () => controller.abort();
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+
+      <main className="flex-1">
+        <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-8">
+          <div className="px-2 sm:px-6 pt-4 sm:pt-6">
+            <h1 className="text-xl font-bold">Results for “{query}”</h1>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
+            <aside className="px-2 pb-4 sm:px-6 sm:pb-6 md:border-r md:border-border">
+              <h3 className="text-base font-semibold text-foreground">
+                Genres
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                See lists of movies by genre
+              </p>
+
+              <div className="mt-3">
+                <GenreChips
+                  genres={genres}
+                  activeId={null}
+                  isLoading={loadingGenres}
+                  error={genreError}
+                  baseHref="/pages/genres"
+                  skeletonCount={genresCount}
+                />
+              </div>
+            </aside>
+
+            <section className="px-2 pb-6 sm:px-6">
+              <h2 className="text-base font-semibold text-foreground sm:text-lg">
+                {query.trim()
+                  ? `${searchedMovies.length} results for "${query}"`
+                  : "Search"}
+              </h2>
+
+              {searchError && (
+                <p className="mt-2 text-sm text-destructive">{searchError}</p>
+              )}
+
+              <div className="mt-4">
+                <MovieGrid
+                  movies={searchedMovies}
+                  limit={12}
+                  skeletonCount={12}
+                  isLoading={loadingSearch}
+                />
+              </div>
+
+              <div className="mt-8 flex justify-end">
+                <Pager
+                  page={page}
+                  totalPages={Math.min(totalPages, 500)}
+                  onPageChange={setPage}
+                  maxButtons={3}
+                  isLoading={loadingSearch}
+                />
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
