@@ -19,7 +19,7 @@ export default function SearchDropdown({
       const t = (term || "").trim();
       if (t) localStorage.setItem(LS_KEY, t);
     } catch {
-      // ignore (private mode / blocked)
+      // zza lai2 haha
     }
   };
 
@@ -63,7 +63,7 @@ export default function SearchDropdown({
                   query,
                 )}&page=1`}
                 onClick={() => {
-                  saveTerm(query); // ✅ save before navigate
+                  saveTerm(query); 
                   onClose();
                 }}
                 className="block w-full mt-2 text-sm py-2 sm:py-2.5 rounded-lg hover:bg-muted text-muted-foreground text-center"
@@ -95,7 +95,7 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
     <Link
       href={`/pages/${movie.id}`}
       onClick={() => {
-        onSaveTerm?.(); // ✅ optional save term when opening a result
+        onSaveTerm?.(); 
         onClose();
       }}
       className="

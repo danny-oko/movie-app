@@ -118,7 +118,6 @@ export default function Input() {
     setOpen(true);
     debouncedSetQuery(val);
 
-    // ✅ optional: store raw text too (feels better on refresh)
     try {
       localStorage.setItem(LS_KEY, val);
     } catch {}
@@ -132,7 +131,6 @@ export default function Input() {
     setError(null);
     setOpen(false);
 
-    // ✅ clear storage
     try {
       localStorage.removeItem(LS_KEY);
     } catch {}
@@ -174,7 +172,7 @@ export default function Input() {
           empty={empty}
           error={error}
           onClose={() => setOpen(false)}
-          query={query} // ✅ pass trimmed query (better than text)
+          query={query}
         />
       )}
     </div>
