@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-
+// tgj bgad instance bolgonoo bagshoo hha
 export async function GET(_req) {
   const token = process.env.TMDB_TOKEN;
   if (!token)
