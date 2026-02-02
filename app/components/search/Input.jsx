@@ -1,20 +1,26 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import debounce from "lodash.debounce";
+import SearchDropdown from "./SearchDropDown";
 
-const Input = () => {
-  const [error, setError] = useState<string | null>(null);
-  const [movies, setMovies] = useState<any[]>([]);
-  const [inputValue, setInputValue] = useState(""); // instant typing
-  const [query, setQuery] = useState(""); // debounced value
-  const [page, setPage] = useState(1);
+export default function Input() {
+  const [text, setText] = useState("");
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState(null);
+  const [error, setError] = useState(null);
+
+  const wrapRef = useRef(null);
 
   const debouncedSetQuery = useMemo(
     () =>
-      debounce((value: string) => {
-        setQuery(value);
+      debounce((val) => {
+        setQuery(val.trim());
       }, 300),
     [],
   );
@@ -22,9 +28,26 @@ const Input = () => {
   useEffect(() => () => debouncedSetQuery.cancel(), [debouncedSetQuery]);
 
   useEffect(() => {
-    const trimmed = query.trim();
-    if (!trimmed) {
+    const onDown = (e) => {
+      if (!wrapRef.current) return;
+      if (!wrapRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    if (!query) {
       setMovies([]);
+      setEmpty(null);
       setError(null);
       setLoading(false);
       return;
@@ -35,70 +58,88 @@ const Input = () => {
     (async () => {
       try {
         setLoading(true);
+        setEmpty(null);
         setError(null);
 
-        const res = await axios.get("/api/tmdb/search", {
-          params: { query: trimmed, page },
-          signal: controller.signal,
-        });
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+            query,
+          )}&language=en-US&page=1`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
+            },
+            signal: controller.signal,
+          },
+        );
 
-        setMovies(res?.data?.results ?? []);
-      } catch (e: any) {
+        const results = res?.data?.results ?? [];
+        setMovies(results);
+
+        if (results.length === 0) setEmpty("No matching results");
+      } catch (e) {
         if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
-        setError(e?.message ?? "Something went wrong");
+        setError("No Results Found");
       } finally {
         setLoading(false);
       }
     })();
 
     return () => controller.abort();
-  }, [query, page]);
+  }, [query]);
+
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setText(val);
+    setOpen(true);
+    debouncedSetQuery(val);
+  };
+
+  const clearAll = () => {
+    setText("");
+    setQuery("");
+    setMovies([]);
+    setEmpty(null);
+    setError(null);
+    setOpen(false);
+  };
 
   return (
-    <div className="space-y-2">
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => {
-          const v = e.target.value;
-          setInputValue(v); // instant update
-          setPage(1); // reset page
-          debouncedSetQuery(v); // debounced search
-        }}
-        className="w-[260px] p-2 border rounded-lg"
-        placeholder="Search movie..."
-      />
+    <div ref={wrapRef} className="relative w-[380px] ">
+      <div className="relative">
+        <input
+          type="text"
+          value={text}
+          onChange={handleChange}
+          onFocus={() => {
+            if (text.trim()) setOpen(true);
+          }}
+          className="w-full h-[36px] p-2 pr-9 border rounded-lg text-sm"
+          placeholder="🔎 type to search"
+        />
 
-      {loading && <p className="text-sm opacity-70">Loading...</p>}
-      {error && <p className="text-sm text-red-500">{error}</p>}
-
-      <div className="flex gap-2">
-        <button
-          className="px-3 py-1 border rounded"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1 || loading}
-        >
-          Prev
-        </button>
-        <button
-          className="px-3 py-1 border rounded"
-          onClick={() => setPage((p) => p + 1)}
-          disabled={loading}
-        >
-          Next
-        </button>
-        <span className="text-sm opacity-70 self-center">Page {page}</span>
+        {text ? (
+          <button
+            type="button"
+            onClick={clearAll}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground text-sm"
+            aria-label="Clear"
+          >
+            ✕
+          </button>
+        ) : null}
       </div>
 
-      <ul className="space-y-1">
-        {movies.map((m) => (
-          <li key={m.id} className="text-sm">
-            {m.title}
-          </li>
-        ))}
-      </ul>
+      {open && (text.trim() || loading) && (
+        <SearchDropdown
+          movies={movies}
+          loading={loading}
+          empty={empty}
+          error={error}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </div>
   );
-};
-
-export default Input;
+}
