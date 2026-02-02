@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const LS_KEY = "search_term";
+
 export default function SearchDropdown({
   movies,
   loading,
@@ -12,6 +14,15 @@ export default function SearchDropdown({
   onClose,
   query,
 }) {
+  const saveTerm = (term) => {
+    try {
+      const t = (term || "").trim();
+      if (t) localStorage.setItem(LS_KEY, t);
+    } catch {
+      // ignore (private mode / blocked)
+    }
+  };
+
   return (
     <div
       className="
@@ -23,12 +34,7 @@ export default function SearchDropdown({
       role="dialog"
       aria-label="Search results"
     >
-      <div
-        className="
-          max-h-[60vh] sm:max-h-[360px]
-          overflow-y-auto
-        "
-      >
+      <div className="max-h-[60vh] sm:max-h-[360px] overflow-y-auto">
         {loading ? (
           <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
             <RowSkeleton />
@@ -43,13 +49,23 @@ export default function SearchDropdown({
         ) : (
           <div className="p-2 sm:p-3 space-y-1 sm:space-y-2">
             {movies.slice(0, 8).map((m) => (
-              <ResultRow key={m.id} movie={m} onClose={onClose} />
+              <ResultRow
+                key={m.id}
+                movie={m}
+                onClose={onClose}
+                onSaveTerm={() => saveTerm(query)}
+              />
             ))}
 
             {movies.length > 8 ? (
               <Link
-                href={`/pages/searchResults?query=${encodeURIComponent(query)}&page=1`}
-                onClick={onClose}
+                href={`/pages/searchResults?query=${encodeURIComponent(
+                  query,
+                )}&page=1`}
+                onClick={() => {
+                  saveTerm(query); // ✅ save before navigate
+                  onClose();
+                }}
                 className="block w-full mt-2 text-sm py-2 sm:py-2.5 rounded-lg hover:bg-muted text-muted-foreground text-center"
               >
                 See all results
@@ -62,8 +78,7 @@ export default function SearchDropdown({
   );
 }
 
-
-function ResultRow({ movie, onClose }) {
+function ResultRow({ movie, onClose, onSaveTerm }) {
   const imgBaseUrl = "https://image.tmdb.org/t/p/w92";
   const title = movie?.title || movie?.original_title || "Untitled";
   const year = movie?.release_date ? movie.release_date.slice(0, 4) : "--";
@@ -79,7 +94,10 @@ function ResultRow({ movie, onClose }) {
   return (
     <Link
       href={`/pages/${movie.id}`}
-      onClick={onClose}
+      onClick={() => {
+        onSaveTerm?.(); // ✅ optional save term when opening a result
+        onClose();
+      }}
       className="
         flex items-center gap-2 sm:gap-3
         p-2 sm:p-3

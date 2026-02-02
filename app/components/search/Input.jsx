@@ -5,6 +5,8 @@ import axios from "axios";
 import debounce from "lodash.debounce";
 import SearchDropdown from "./SearchDropDown";
 
+const LS_KEY = "search_term";
+
 export default function Input() {
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
@@ -17,10 +19,25 @@ export default function Input() {
 
   const wrapRef = useRef(null);
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LS_KEY) || "";
+      if (saved.trim()) {
+        setText(saved);
+        setQuery(saved.trim());
+      }
+    } catch {}
+  }, []);
+
   const debouncedSetQuery = useMemo(
     () =>
       debounce((val) => {
-        setQuery(val.trim());
+        const trimmed = val.trim();
+        setQuery(trimmed);
+
+        try {
+          if (trimmed) localStorage.setItem(LS_KEY, trimmed);
+        } catch {}
       }, 300),
     [],
   );
@@ -94,6 +111,11 @@ export default function Input() {
     setText(val);
     setOpen(true);
     debouncedSetQuery(val);
+
+    // ✅ optional: store raw text too (feels better on refresh)
+    try {
+      localStorage.setItem(LS_KEY, val);
+    } catch {}
   };
 
   const clearAll = () => {
@@ -103,6 +125,11 @@ export default function Input() {
     setEmpty(null);
     setError(null);
     setOpen(false);
+
+    // ✅ clear storage
+    try {
+      localStorage.removeItem(LS_KEY);
+    } catch {}
   };
 
   return (
@@ -141,7 +168,7 @@ export default function Input() {
           empty={empty}
           error={error}
           onClose={() => setOpen(false)}
-          query={text}
+          query={query} // ✅ pass trimmed query (better than text)
         />
       )}
     </div>

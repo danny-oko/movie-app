@@ -33,7 +33,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0",
-    "use-debounce": "^10.1.0"
+    "use-debounce": "^10.1.0",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
