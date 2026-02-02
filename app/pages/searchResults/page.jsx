@@ -1,7 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import MovieGrid from "../../../components/ui/MovieGrid";
@@ -10,9 +9,23 @@ import Footer from "../../components/Footer";
 import GenreChips from "../../../components/ui/GenreChips";
 import Pager from "../../../components/ui/Pager";
 
+const LS_KEY = "search_term";
+
 export default function SearchResultsPage() {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
+  // ✅ load search term from localStorage
+  const [storedQuery, setStoredQuery] = useState("");
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LS_KEY) || "";
+      setStoredQuery(saved.trim());
+    } catch {
+      setStoredQuery("");
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
 
   const [page, setPage] = useState(1);
 
@@ -28,16 +41,18 @@ export default function SearchResultsPage() {
   const [genreError, setGenreError] = useState(null);
   const [loadingGenres, setLoadingGenres] = useState(true);
 
-  // reset page when query changes (so new searches start from 1)
+  // ✅ reset page when storedQuery changes
   useEffect(() => {
     setPage(1);
-  }, [query]);
+  }, [storedQuery]);
 
-  // fetch searched movies
+  // ✅ fetch searched movies using storedQuery
   useEffect(() => {
-    if (!query.trim()) {
+    if (!hydrated) return; // wait until localStorage read
+
+    if (!storedQuery.trim()) {
       setSearchedMovies([]);
-      setSearchError(null);
+      setSearchError("No search term saved. Search something first.");
       setTotalPages(1);
       setLoadingSearch(false);
       return;
@@ -52,7 +67,7 @@ export default function SearchResultsPage() {
 
         const res = await axios.get(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-            query,
+            storedQuery,
           )}&language=en-US&page=${page}`,
           {
             headers: {
@@ -77,7 +92,7 @@ export default function SearchResultsPage() {
     })();
 
     return () => controller.abort();
-  }, [query, page]);
+  }, [storedQuery, page, hydrated]);
 
   // fetch genres
   useEffect(() => {
@@ -113,7 +128,9 @@ export default function SearchResultsPage() {
       <main className="flex-1">
         <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-8">
           <div className="px-2 sm:px-6 pt-4 sm:pt-6">
-            <h1 className="text-xl font-bold">Results for “{query}”</h1>
+            <h1 className="text-xl font-bold">
+              Results for “{storedQuery || "..."}”
+            </h1>
           </div>
 
           <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
@@ -139,8 +156,8 @@ export default function SearchResultsPage() {
 
             <section className="px-2 pb-6 sm:px-6">
               <h2 className="text-base font-semibold text-foreground sm:text-lg">
-                {query.trim()
-                  ? `${searchedMovies.length} results for "${query}"`
+                {storedQuery.trim()
+                  ? `${searchedMovies.length} results for "${storedQuery}"`
                   : "Search"}
               </h2>
 
