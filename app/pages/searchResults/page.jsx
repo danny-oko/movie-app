@@ -12,7 +12,6 @@ import Pager from "../../../components/ui/Pager";
 const LS_KEY = "search_term";
 
 export default function SearchResultsPage() {
-  // ✅ load search term from localStorage
   const [storedQuery, setStoredQuery] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
@@ -29,26 +28,22 @@ export default function SearchResultsPage() {
 
   const [page, setPage] = useState(1);
 
-  // SEARCH results
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [searchError, setSearchError] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
 
-  // GENRES sidebar
   const [genres, setGenres] = useState([]);
   const [genresCount, setGenresCount] = useState(10);
   const [genreError, setGenreError] = useState(null);
   const [loadingGenres, setLoadingGenres] = useState(true);
 
-  // ✅ reset page when storedQuery changes
   useEffect(() => {
     setPage(1);
   }, [storedQuery]);
 
-  // ✅ fetch searched movies using storedQuery
   useEffect(() => {
-    if (!hydrated) return; // wait until localStorage read
+    if (!hydrated) return;
 
     if (!storedQuery.trim()) {
       setSearchedMovies([]);
@@ -72,7 +67,7 @@ export default function SearchResultsPage() {
           {
             headers: {
               accept: "application/json",
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN}`,
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYjRhZTgxN2Y1MTQ4ZTkyMDIzMWM1OTBmNTZjZWE1YyIsIm5iZiI6MTc2NzY4ODIyMi4wNzksInN1YiI6IjY5NWNjODFlODI2NmNmOGUyMWRjMmM4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CefpI5lXcMjzRN2Zm-Ap3g5nGh8x2swrJ4Y1MME_HzM`,
             },
             signal: controller.signal,
           },
@@ -94,7 +89,6 @@ export default function SearchResultsPage() {
     return () => controller.abort();
   }, [storedQuery, page, hydrated]);
 
-  // fetch genres
   useEffect(() => {
     const controller = new AbortController();
 
