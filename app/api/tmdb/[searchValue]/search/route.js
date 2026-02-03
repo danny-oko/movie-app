@@ -2,7 +2,6 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
-  console.log("hshsh");
   const searchValue = (params?.query || "").trim();
 
   const { searchParams } = new URL(req.url);

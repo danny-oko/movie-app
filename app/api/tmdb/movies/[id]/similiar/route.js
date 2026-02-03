@@ -26,7 +26,7 @@ export async function GET(req, { params }) {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(res.data);
+
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const message =

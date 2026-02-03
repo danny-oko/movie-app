@@ -26,7 +26,6 @@ const Page = () => {
         setMovieList(res.data?.results ?? []);
       } catch (e) {
         if (!alive) return;
-        console.error(e);
         setError("Failed to fetch data from TMDB");
         setMovieList([]);
       } finally {

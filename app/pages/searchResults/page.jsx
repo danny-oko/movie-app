@@ -12,7 +12,6 @@ import Pager from "../../../components/ui/Pager";
 const LS_KEY = "search_term";
 
 export default function SearchResultsPage() {
-
   const [storedQuery, setStoredQuery] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
@@ -60,7 +59,6 @@ export default function SearchResultsPage() {
       try {
         setLoadingSearch(true);
         setSearchError(null);
-        console.log(storedQuery);
 
         const res = await axios.get(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
@@ -74,7 +72,6 @@ export default function SearchResultsPage() {
             signal: controller.signal,
           },
         );
-
 
         const results = res?.data?.results ?? [];
         setSearchedMovies(results);
@@ -91,7 +88,7 @@ export default function SearchResultsPage() {
 
     return () => controller.abort();
   }, [storedQuery, page, hydrated]);
-console.log(process.env.TMDB_TOKEN, "Search page");
+
   useEffect(() => {
     const controller = new AbortController();
 

@@ -14,7 +14,6 @@ export async function GET(_req, { params }) {
     }
 
     const url = `https://api.themoviedb.org/3/movie/${id}?language=en-US`;
-    console.log(id);
 
     const res = await axios.get(url, {
       headers: {
@@ -22,7 +21,6 @@ export async function GET(_req, { params }) {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(res);
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status || 500;
