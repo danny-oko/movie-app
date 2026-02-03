@@ -3,6 +3,7 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { MoviesService } from "@/lib/services/movies";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
@@ -16,18 +17,17 @@ const Page = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     const controller = new AbortController();
     const run = async () => {
       try {
-        const { data } = await axios.get(`/api/tmdb/top-rated?page=${page}`, {
-          signal: controller.signal,
+        MoviesService.popular(page).then((data) => {
+          setMovies(data?.results || []);
+          setTotalPages(data?.total_pages || 1);
         });
-        setMovies(data?.results);
-        setTotalPage(data.total_pages);
       } catch (e) {
         if (
           axios.isCancel?.(e) ||
@@ -72,7 +72,7 @@ const Page = () => {
 
         <Pager
           page={page}
-          totalPages={totalPage}
+          totalPages={totalPages}
           onPageChange={setPage}
           maxButtons={3}
           disabled={loading}

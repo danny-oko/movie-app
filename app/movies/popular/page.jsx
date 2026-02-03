@@ -2,7 +2,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import { MoviesService } from "@/lib/services/movies";
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
 

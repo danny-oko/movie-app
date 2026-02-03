@@ -1,11 +1,11 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
+import { tmdbServer } from "../../../../lib/tmdb/tmdbServer";
 
 export async function GET(req) {
-  const token = process.env.TMDB_TOKEN;
-  if (!token) {
+  if (!process.env.TMDB_TOKEN) {
     return NextResponse.json(
-      { message: "Missing Environment variables" },
+      { message: "Missing environment Variables" },
       { status: 500 },
     );
   }
@@ -14,16 +14,12 @@ export async function GET(req) {
   const pageRaw = searchParams.get("page") || "1";
   const page = Math.max(1, Number(pageRaw) || 1);
 
+  const language = searchParams.get("language") || "en-Us";
+
   try {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=${page}`,
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const { data } = await tmdbServer.get(`/movie/upcoming`, {
+      params: { language, page },
+    });
 
     return NextResponse.json(data);
   } catch (err) {

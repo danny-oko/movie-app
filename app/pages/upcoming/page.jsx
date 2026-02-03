@@ -3,6 +3,7 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { MoviesService } from "@/lib/services/movies";
 
 import { Button } from "@/components/ui/button";
 import MovieGrid from "../../../components/ui/MovieGrid";
@@ -27,13 +28,10 @@ const Page = () => {
       try {
         setLoading(true);
         setError(null);
-
-        const { data } = await axios.get(`/api/tmdb/upcoming?page=${page}`, {
-          signal: controller.signal,
+        MoviesService.popular(page).then((data) => {
+          setMovies(data?.results || []);
+          setTotalPages(data?.total_pages || 1);
         });
-
-        setMovies(data?.results ?? []);
-        setTotalPages(data?.total_pages ?? 1);
       } catch (e) {
         if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;
         setError(e?.message || "Failed to load");

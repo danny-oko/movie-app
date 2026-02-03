@@ -1,23 +1,16 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-// tgj bgad instance bolgonoo bagshoo hha
-export async function GET(_req) {
-  const token = process.env.TMDB_TOKEN;
-  if (!token)
+import { tmdbServer } from "../../../../lib/tmdb/tmdbServer";
+
+export async function GET(req) {
+  if (!process.env.TMDB_TOKEN) {
     return NextResponse.json(
-      { message: "Missing Environment variables" },
+      { message: "Missing environment variables" },
       { status: 500 },
     );
+  }
   try {
-    const res = await axios.get(
-      "https://api.themoviedb.org/3/genre/movie/list?language=en",
-      {
-        headers: {
-          Accept: "applicatio/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const { data } = await tmdbServer.get(`/genre/movie/list`);
     return NextResponse.json(res.data, { status: 200 });
   } catch (err) {
     const status = err?.data?.status || 500;

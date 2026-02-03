@@ -3,6 +3,7 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { MoviesService } from "@/lib/services/movies";
 
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
@@ -21,13 +22,13 @@ const Page = () => {
 
   useEffect(() => {
     const controller = new AbortController();
+
     const getData = async () => {
       try {
-        const { data } = await axios.get(`/api/tmdb/popular?page=${page}`, {
-          signal: controller.signal,
+        MoviesService.popular(page).then((data) => {
+          setMovies(data?.results || []);
+          setTotalPages(data?.total_pages || 1);
         });
-        setMovies(data?.results ?? []);
-        setTotalPages(data?.total_pages);
       } catch (e) {
         if (
           axios.isCancel?.(e) ||
