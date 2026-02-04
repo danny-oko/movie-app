@@ -16,6 +16,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { MoviesService } from "@/lib/services/movies";
+
 const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
 function UpcomingHeroSkeleton() {
