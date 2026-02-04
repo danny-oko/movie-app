@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-
+import { MoviesService } from "@/lib/services/movies";
 import {
   Carousel,
   CarouselContent,
@@ -15,8 +15,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-
-import { MoviesService } from "@/lib/services/movies";
 
 const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
@@ -63,11 +61,11 @@ export default function UpcomingHero() {
         setIsLoading(true);
         setError(null);
 
-        const res = await axios.get("/api/tmdb/nowPlaying", {
-          signal: controller.signal,
+        MoviesService.nowPlaying(page).then((data) => {
+          // setMovies(data?.results || []);
+          console.log(data);
         });
-
-        setMovies(res.data?.results ?? []);
+        // setMovies(data.data?.results ?? []);
       } catch (e) {
         if (e?.name === "CanceledError" || e?.code === "ERR_CANCELED") return;
         setError("Internal Server Error");
