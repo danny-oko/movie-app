@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-import { tmdbServer } from "../../../../../../lib/tmdb/tmdbServer";
+import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
 export async function GET(_req, { params }) {
   try {

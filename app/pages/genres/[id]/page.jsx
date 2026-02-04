@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import GenreChips from "../../../../components/ui/GenreChips";
-import MovieGrid from "../../../../components/ui/MovieGrid";
-import Pager from "../../../../components/ui/Pager";
-import Footer from "../../../components/Footer";
-import Header from "../../../components/Header";
+import GenreChips from "@/components/ui/GenreChips";
+import MovieGrid from "@/components/ui/MovieGrid";
+import Pager from "@/components/ui/Pager";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
 
 import { useParams } from "next/navigation";
 import { MoviesService } from "@/lib/services/movies";

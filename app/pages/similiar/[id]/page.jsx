@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import MovieGrid from "../../../../components/ui/MovieGrid";
-import Pager from "../../../../components/ui/Pager";
-import Footer from "../../../components/Footer";
-import Header from "../../../components/Header";
+import MovieGrid from "@/components/ui/MovieGrid";
+import Pager from "@/components/ui/Pager";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
 
 export default function Page() {
   const { id } = useParams();

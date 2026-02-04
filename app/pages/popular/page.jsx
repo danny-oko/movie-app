@@ -5,13 +5,13 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MoviesService } from "@/lib/services/movies";
 
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
 
 import { Button } from "@/components/ui/button";
-import MovieGrid from "../../../components/ui/MovieGrid";
+import MovieGrid from "@/components/ui/MovieGrid";
 
-import Pager from "../../../components/ui/Pager";
+import Pager from "@/components/ui/Pager";
 
 const Page = () => {
   const [error, setError] = useState(null);

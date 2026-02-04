@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import MovieGrid from "../../../components/ui/MovieGrid";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import GenreChips from "../../../components/ui/GenreChips";
-import Pager from "../../../components/ui/Pager";
+import MovieGrid from "@/components/ui/MovieGrid";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import GenreChips from "@/components/ui/GenreChips";
+import Pager from "@/components/ui/Pager";
 
 const LS_KEY = "search_term";
 

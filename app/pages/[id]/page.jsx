@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import MovieDetails from "../../../components/ui/MovieDetails";
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
+import MovieDetails from "@/components/ui/MovieDetails";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
+
+import { MoviesService } from "@/lib/services/movies";
 
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
@@ -29,7 +31,6 @@ export default function Page() {
     const getCredits = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`/api/tmdb/movies/${id}/credits`);
 
         setCrew(res.data.crew);
         setCasts(res.data.cast);

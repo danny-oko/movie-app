@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { tmdbServer } from "../../../../lib/tmdb/tmdbServer";
+import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
 export async function GET(req) {
   if (!process.env.TMDB_TOKEN) {
