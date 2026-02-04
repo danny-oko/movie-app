@@ -7,76 +7,83 @@ import Pager from "../../../../components/ui/Pager";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
 
-import axios from "axios";
 import { useParams } from "next/navigation";
+import { MoviesService } from "@/lib/services/movies";
 
 export default function Page() {
   const { id } = useParams();
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
   const [genres, setGenres] = useState([]);
-  const [genresCount, setGenresCount] = useState();
+  const [genresCount, setGenresCount] = useState(8);
   const [genreError, setGenreError] = useState(null);
+  const [loadingGenres, setLoadingGenres] = useState(true);
+
   const [movies, setMovies] = useState([]);
   const [moviesError, setMoviesError] = useState(null);
-  const [loadingGenres, setLoadingGenres] = useState(true);
   const [loadingMovies, setLoadingMovies] = useState(true);
 
   useEffect(() => {
-    const controller = new AbortController();
+    let alive = true;
 
-    const getGenres = async () => {
+    (async () => {
       try {
-        const res = await axios.get("/api/tmdb/genres", {
-          signal: controller.signal,
-        });
-        setGenresCount(res?.data?.genres?.legnth);
-        setGenres(res?.data?.genres ?? []);
+        setLoadingGenres(true);
+        setGenreError(null);
+
+        const data = await MoviesService.genres();
+        if (!alive) return;
+
+        const list = data?.genres || [];
+        setGenres(list);
+        setGenresCount(list.length || 8);
       } catch (e) {
-        if (axios.isCancel(e) || e.code === "ERR_CANCELED") return;
+        if (!alive) return;
         setGenreError(e?.message || "Failed to Load Genres");
       } finally {
+        if (!alive) return;
         setLoadingGenres(false);
       }
-    };
-    getGenres();
+    })();
 
     return () => {
-      controller.abort();
+      alive = false;
     };
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
+    if (!id) return;
 
-    const getMoviesByGenre = async () => {
+    let alive = true;
+
+    (async () => {
       try {
         setLoadingMovies(true);
         setMoviesError(null);
 
-        const { data } = await axios.get(
-          `/api/tmdb/movies/${id}/movies-by-genre?page=${page}`,
-          { signal: controller.signal },
-        );
+        const data = await MoviesService.moviesByGenre(id, page);
+        if (!alive) return;
 
-        setMovies(data?.results ?? []);
-        setTotalPages(data?.total_pages ?? 1);
+        setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
       } catch (e) {
-        if (axios.isCancel(e) || e.code === "ERR_CANCELED") return;
-        setMoviesError(e?.message || "Failed to Load Genres");
+        if (!alive) return;
+        setMoviesError(e?.message || "Failed to Load Movies");
       } finally {
+        if (!alive) return;
         setLoadingMovies(false);
       }
-    };
-    getMoviesByGenre();
+    })();
 
     return () => {
-      controller.abort();
+      alive = false;
     };
   }, [id, page]);
 
   const activeGenre = genres.find((g) => String(g.id) === String(id));
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
