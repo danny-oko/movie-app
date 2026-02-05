@@ -11,10 +11,10 @@ const page = () => {
     <>
       <Header />
       <HeroSection />
-      {/* <Upcoming />
+      <Upcoming />
       <Popular />
-      <Top /> */}
-      {/* <Footer /> */}
+      <Top />
+      <Footer />
     </>
   );
 };

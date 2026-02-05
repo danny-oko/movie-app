@@ -6,16 +6,16 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../../components/ui/carousel";
-import HeroSlide from "./HeroSlide";
+} from "@/components/ui/carousel";
+import Slider from "./Slider";
 
-export default function UpcomingHeroCarousel({ movies, onWatchTrailer }) {
+export default function HeroCarousel({ movies, onWatchTrailer }) {
   return (
     <Carousel className="h-full w-full">
       <CarouselContent className="h-full">
         {movies.map((m) => (
           <CarouselItem key={m.id} className="h-full">
-            <HeroSlide movie={m} onWatchTrailer={onWatchTrailer} />
+            <Slider movie={m} onWatchTrailer={onWatchTrailer} />
           </CarouselItem>
         ))}
       </CarouselContent>

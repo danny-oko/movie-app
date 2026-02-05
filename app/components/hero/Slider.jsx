@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 
 const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
-export default function HeroSlide({ movie, onWatchTrailer }) {
+export default function Slider({ movie, onWatchTrailer }) {
   const backdrop = movie?.backdrop_path
     ? `${IMAGE_BASE}${movie.backdrop_path}`
-    : null;
+    : `Failed to load image ${movie.original_title}`;
 
+  // console.log("movie id", movie.id);
   return (
     <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
-      {backdrop ? (
+     {backdrop ? (
         <img
           src={backdrop}
           alt={movie?.title ?? "Movie"}
