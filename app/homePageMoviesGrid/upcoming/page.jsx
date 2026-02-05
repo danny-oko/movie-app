@@ -6,34 +6,32 @@ import { useEffect, useState } from "react";
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
 
-const Page = () => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+import { moviesService } from "@/lib/services/movies";
+
+const Page = ({ movies }) => {
   const [movieList, setMovieList] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     let alive = true;
 
     const run = async () => {
       try {
-        setError(null);
-        setIsLoading(true);
-
-        const res = await axios.get("/api/tmdb/popular");
+        moviesService.upcoming(page).then((data) => {
+          setMovieList(data?.results ?? []);
+        });
 
         if (!alive) return;
-
-        setMovieList(res.data?.results ?? []);
-      } catch (e) {
+      } catch (error) {
         if (!alive) return;
-        setError("Failed to fetch data from TMDB");
-        setMovieList([]);
+        setError("internal server error");
       } finally {
         if (!alive) return;
-        setIsLoading(false);
+        setLoading(false);
       }
     };
-
     run();
     return () => {
       alive = false;
@@ -43,20 +41,19 @@ const Page = () => {
   return (
     <section className="bg-background">
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        {isLoading && <p className="text-foreground">Loading...</p>}
         {error && <p className="text-destructive">{error}</p>}
 
         <aside className="flex flex-row items-center justify-between gap-4">
           <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
-            Popular
+            Upcoming
           </h3>
           <Button variant="seeMore" className="w-fit touch-manipulation">
-            <Link href={"/pages/popular"}>See more →</Link>
+            <Link href={"/upcoming"}>See more →</Link>
           </Button>
         </aside>
 
         <div className="mt-4 sm:mt-5">
-          <MovieGrid movies={movieList} isLoading={isLoading} />
+          <MovieGrid movies={movieList} isLoading={loading} />
         </div>
       </div>
     </section>

@@ -2,10 +2,6 @@ import { NextResponse } from "next/server";
 import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const page = Math.max(1, Number(searchParams.get("page") || 1));
-  const language = searchParams.get("language") || "en-US";
-
   if (!process.env.TMDB_TOKEN) {
     return NextResponse.json(
       { message: "Missing Environment Variables" },
@@ -14,8 +10,8 @@ export async function GET(req) {
   }
 
   try {
-    const { data } = await tmdbServer.get("/movie/now_playing", {
-      params: { language, page },
+    const { data } = await tmdbServer.get(`/movie/${movieId}`, {
+      params: { language: "en-Us" },
     });
 
     return NextResponse.json(data, { status: 200 });

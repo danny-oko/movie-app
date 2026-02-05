@@ -1,15 +1,18 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import MovieGrid from "@/components/ui/MovieGrid";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
+import { moviesService } from "@/lib/services/movies";
 
 const Page = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [movieList, setMovieList] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     let alive = true;
@@ -19,11 +22,11 @@ const Page = () => {
         setError(null);
         setIsLoading(true);
 
-        const res = await axios.get("/api/tmdb/top-rated");
+        moviesService.popular(page).then((data) => {
+          setMovieList(data?.results ?? []);
+        });
 
         if (!alive) return;
-
-        setMovieList(res.data?.results ?? []);
       } catch (e) {
         if (!alive) return;
         setError("Failed to fetch data from TMDB");
@@ -43,14 +46,15 @@ const Page = () => {
   return (
     <section className="bg-background">
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+        {isLoading && <p className="text-foreground">Loading...</p>}
         {error && <p className="text-destructive">{error}</p>}
 
         <aside className="flex flex-row items-center justify-between gap-4">
           <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
-            Top Rated
+            Popular
           </h3>
           <Button variant="seeMore" className="w-fit touch-manipulation">
-            <Link href={"/pages/top-rated"}>See more →</Link>
+            <Link href={"/popular"}>See more →</Link>
           </Button>
         </aside>
 

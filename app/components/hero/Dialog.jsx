@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MoviesService } from "@/lib/services/movies";
+import { moviesService } from "@/lib/services/movies";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
@@ -35,7 +35,7 @@ export default function TrailerDialog({ open, movieId, onClose }) {
         setLoading(true);
         setEmbedUrl(null);
 
-        const data = await MoviesService.trailer(movieId);
+        const data = await moviesService.trailer(movieId);
 
         const video = pickOfficialTrailer(data?.results);
         const url = video?.key ? buildYouTubeEmbed(video.key) : null;

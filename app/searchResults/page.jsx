@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import MovieGrid from "@/components/ui/MovieGrid";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/app/components/Header";
+import Footer from "@/app/components/Footer";
 import GenreChips from "@/components/ui/GenreChips";
 import Pager from "@/components/ui/Pager";
+
+import { moviesService } from "@/lib/services/movies";
 
 const LS_KEY = "search_term";
 

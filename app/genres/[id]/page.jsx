@@ -8,7 +8,7 @@ import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
 import { useParams } from "next/navigation";
-import { MoviesService } from "@/lib/services/movies";
+import { moviesService } from "@/lib/services/movies";
 
 export default function Page() {
   const { id } = useParams();
@@ -33,7 +33,7 @@ export default function Page() {
         setLoadingGenres(true);
         setGenreError(null);
 
-        const data = await MoviesService.genres();
+        const data = await moviesService.genres();
         if (!alive) return;
 
         const list = data?.genres || [];

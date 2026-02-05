@@ -10,6 +10,8 @@ import Pager from "@/components/ui/Pager";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
+import { moviesService } from "@/lib/services/movies";
+
 export default function Page() {
   const { id } = useParams();
 

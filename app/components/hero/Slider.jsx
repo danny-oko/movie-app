@@ -9,7 +9,6 @@ export default function Slider({ movie, onWatchTrailer }) {
     ? `${IMAGE_BASE}${movie.backdrop_path}`
     : `Failed to load image ${movie.original_title}`;
 
-  // console.log("movie id", movie.id);
   return (
     <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
       {backdrop ? (

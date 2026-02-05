@@ -5,7 +5,7 @@ import MovieDetails from "@/components/ui/MovieDetails";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
-import { MoviesService } from "@/lib/services/movies";
+import { moviesService } from "@/lib/services/movies";
 
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
@@ -25,12 +25,14 @@ export default function Page() {
   const [error, setError] = useState(null);
 
   const pushToSimilarMoviePage = (id) => {
-    router.push(`/pages/similiar/${id}`);
+    router.push(`/similiar/${id}`);
   };
   useEffect(() => {
     const getCredits = async () => {
       try {
         setLoading(true);
+
+        moviesService.
 
         setCrew(res.data.crew);
         setCasts(res.data.cast);
