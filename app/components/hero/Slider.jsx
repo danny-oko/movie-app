@@ -12,7 +12,7 @@ export default function Slider({ movie, onWatchTrailer }) {
   // console.log("movie id", movie.id);
   return (
     <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
-     {backdrop ? (
+      {backdrop ? (
         <img
           src={backdrop}
           alt={movie?.title ?? "Movie"}
@@ -46,7 +46,7 @@ export default function Slider({ movie, onWatchTrailer }) {
 
         <div className="mt-6">
           <Button
-            variant="trailer"
+            variant="default"
             size="lg"
             onClick={() => onWatchTrailer(movie.id)}
           >
