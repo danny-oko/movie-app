@@ -10,10 +10,12 @@ import Pager from "@/components/ui/Pager";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
-import { movieService } from "@/lib/services/movies";
+import { moviesService } from "@/lib/services/movies";
 
 export default function Page() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params?.id;
+  // console.log(id);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,7 +34,7 @@ export default function Page() {
         setLoading(true);
         setError(null);
 
-        movieService.similar(page).then((data) => {
+        moviesService.similar(page).then((data) => {
           setMovies(data?.results ?? []);
           setTotalPages(data?.total_pages ?? 1);
         });
@@ -46,7 +48,7 @@ export default function Page() {
 
     run();
     return () => controller.abort();
-  }, [id, page]);
+  }, [id]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -59,7 +61,9 @@ export default function Page() {
               Similiar
             </h1>
 
-            <Link href={"/"} className="text-sm">← Return to home page</Link>
+            <Link href={"/"} className="text-sm">
+              ← Return to home page
+            </Link>
           </div>
 
           <div className="mt-4 sm:mt-5">

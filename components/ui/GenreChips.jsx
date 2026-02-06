@@ -9,7 +9,7 @@ export default function GenreChips({
   activeId,
   isLoading = true,
   error = null,
-  baseHref = "/pages/genres",
+  baseHref = "/genres",
   skeletonCount = 20,
 }) {
   return (

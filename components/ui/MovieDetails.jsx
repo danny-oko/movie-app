@@ -4,19 +4,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 import { Button } from "../ui/button";
 import GenreChips from "./GenreChips";
-import MovieGridSimiliar from "./MovieGridSimiliar";
+import MovieGrid from "./MovieGrid";
+import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
+import Credits from "./Credits";
 
 const MovieDetails = ({
   movie,
   crew = [],
   casts = [],
-  similiarData = [],
+  similarMovies = [],
   trailer = [],
   id,
-  pushToSimilarMoviePage,
+  pushToSimilarMoviesPage,
   loading = false,
 }) => {
-  if (loading) return <MovieDetailsSkeleton />;
+  if (loading) return <MovieDetailsSkeleton isLoading={loading} />;
 
   if (!movie) return null;
 
@@ -40,6 +42,8 @@ const MovieDetails = ({
   const posterUrl = movie?.poster_path
     ? `${imgBaseUrl}${movie.poster_path}`
     : null;
+
+  console.log("movie", similarMovies);
 
   return (
     <div className="min-h-screen bg-background">
@@ -113,7 +117,7 @@ const MovieDetails = ({
             genres={genres}
             activeId={id}
             isLoading={loading}
-            baseHref="/pages/genres"
+            baseHref="/genres"
           />
         </div>
 
@@ -121,23 +125,7 @@ const MovieDetails = ({
           {movie.overview}
         </p>
 
-        <div className="mt-6 sm:mt-8">
-          <CreditRow
-            label="Director"
-            values={director.slice(0, 2).map((d) => d.name)}
-          />
-          <Divider />
-          <CreditRow
-            label="Writers"
-            values={writers.slice(0, 3).map((w) => w.name)}
-          />
-          <Divider />
-          <CreditRow
-            label="Stars"
-            values={stars.slice(0, 3).map((s) => s.name)}
-          />
-          <Divider />
-        </div>
+        <Credits director={director} writers={writers} stars={stars} />
 
         <div className="mt-8 sm:mt-10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -147,94 +135,19 @@ const MovieDetails = ({
             <Button
               variant="seeMore"
               className="touch-manipulation w-fit"
-              onClick={() => pushToSimilarMoviePage(id)}
+              onClick={() => pushToSimilarMoviesPage(id)}
             >
               More like this →
             </Button>
           </div>
 
           <div className="mt-4 sm:mt-5">
-            <MovieGridSimiliar movies={similiarData} />
+            <MovieGrid movies={similarMovies} />
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-function CreditRow({ label, values = [] }) {
-  return (
-    <div className="grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,180px)_1fr] sm:gap-0 sm:items-center py-4 sm:py-6">
-      <p className="text-sm sm:text-base font-bold text-foreground">{label}</p>
-      <p className="text-sm sm:text-base text-foreground break-words">
-        {values.length ? values.join(" · ") : "--"}
-      </p>
-    </div>
-  );
-}
-
-function Divider() {
-  return <div className="h-px w-full bg-border" />;
-}
-
-function MovieDetailsSkeleton() {
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-12">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-          <div className="space-y-3 min-w-0 flex-1">
-            <Skeleton className="h-8 w-full max-w-[360px] sm:h-10" />
-            <Skeleton className="h-4 w-full max-w-[260px]" />
-          </div>
-          <div className="flex gap-4 sm:flex-col sm:items-end sm:gap-2">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="h-8 w-24" />
-            <Skeleton className="h-3 w-28" />
-          </div>
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(200px,290px)_1fr]">
-          <Skeleton className="w-full max-w-[290px] mx-auto aspect-2/3 rounded-xl lg:mx-0" />
-          <Skeleton className="w-full aspect-video sm:min-h-[320px] md:h-[428px] rounded-xl" />
-        </div>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-7 w-20 rounded-full" />
-          ))}
-        </div>
-
-        <div className="mt-4 space-y-2 max-w-5xl">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-11/12" />
-          <Skeleton className="h-4 w-10/12" />
-        </div>
-
-        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i}>
-              <div className="grid grid-cols-1 gap-1 sm:grid-cols-[180px_1fr] sm:items-center sm:gap-0 py-4 sm:py-6">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-full max-w-[280px] sm:max-w-[18rem]" />
-              </div>
-              <Divider />
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 sm:mt-10">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Skeleton className="h-6 w-40" />
-            <Skeleton className="h-9 w-36 rounded-md" />
-          </div>
-
-          <div className="mt-4 sm:mt-5">
-            <MovieGridSimiliar isLoading />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default MovieDetails;

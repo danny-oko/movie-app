@@ -6,6 +6,7 @@ import MovieGrid from "@/components/ui/MovieGrid";
 import Pager from "@/components/ui/Pager";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 import { useParams } from "next/navigation";
 import { moviesService } from "@/lib/services/movies";
@@ -63,7 +64,7 @@ export default function Page() {
         setLoadingMovies(true);
         setMoviesError(null);
 
-        const data = await MoviesService.moviesByGenre(id, page);
+        const data = await moviesService.moviesByGenre(id, page);
         if (!alive) return;
 
         setMovies(data?.results || []);
@@ -112,7 +113,7 @@ export default function Page() {
                     activeId={id}
                     isLoading={loadingGenres}
                     error={genreError}
-                    baseHref="/pages/genres"
+                    baseHref="/genres"
                     skeletonCount={genresCount}
                   />
                 </div>

@@ -16,8 +16,9 @@ export default function Page() {
   const [crew, setCrew] = useState([]);
   const [casts, setCasts] = useState([]);
   const [details, setDetails] = useState(null);
-  const [similiar, setSimiliar] = useState([]);
-  const [video, setVideo] = useState([]);
+  const [similarMovies, setSimilarMovies] = useState([]);
+  const [trailer, setTrailer] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -48,16 +49,16 @@ export default function Page() {
         setCrew(creditData?.crew ?? []);
         setCasts(creditData?.cast ?? []);
         setDetails(detailData ?? null);
-        setVideo(trailerData?.results ?? trailerData ?? []);
-        setSimiliar(similarData?.results ?? similarData ?? []);
+        setTrailer(trailerData?.results ?? trailerData ?? []);
+        setSimilarMovies(similarData?.results ?? similarData ?? []);
       } catch (e) {
         if (cancelled) return;
         setError(e?.message || "Failed to load movie");
         setCrew([]);
         setCasts([]);
         setDetails(null);
-        setVideo([]);
-        setSimiliar([]);
+        setTrailer([]);
+        setSimilarMovies([]);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -67,14 +68,21 @@ export default function Page() {
       cancelled = true;
     };
   }, [movieId]);
-   
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
       {error && <p className="text-destructive px-4 sm:px-6">{error}</p>}
-      <MovieDetails movieId={movieId} />
-      {/* movie = null, crew = [], casts = [], similiarData = [], trailer = [], id, */}
-      {/* pushToSimilarMoviePage, loading = false, */}
+      <MovieDetails
+        id={movieId}
+        movie={details}
+        casts={casts}
+        crew={crew}
+        similarMovies={similarMovies}
+        pushToSimilarMoviesPage={pushToSimilarMoviePage}
+        trailer={trailer}
+        loading={loading}
+      />
       <Footer />
     </div>
   );
