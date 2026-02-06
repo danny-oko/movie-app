@@ -14,8 +14,8 @@ import { moviesService } from "@/lib/services/movies";
 
 export default function Page() {
   const params = useParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params?.id;
-  // console.log(id);
+  const movieId = Array.isArray(params.id) ? params.id[0] : params?.id;
+  console.log(movieId);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,31 +24,30 @@ export default function Page() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    if (!id) return;
+useEffect(() => {
+  if (!movieId) return;
 
-    const controller = new AbortController();
+  (async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    const run = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+      // const data = await moviesService.similar(movieId, page);
+      // setMovies(data?.results ?? []);
+      // setTotalPages(data?.total_pages ?? 1);
 
-        moviesService.similar(page).then((data) => {
-          setMovies(data?.results ?? []);
-          setTotalPages(data?.total_pages ?? 1);
-        });
-      } catch (e) {
-        if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;
-        setError(e?.message || "Failed to load");
-      } finally {
-        setLoading(false);
-      }
-    };
+      moviesService.similar(movieId,page).then((data) => {
+        console.log(data)
+      })
+    } catch (e) {
+      if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;
+      setError(e?.message || "Failed to load");
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, [movieId, page]);
 
-    run();
-    return () => controller.abort();
-  }, [id]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

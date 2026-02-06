@@ -2,18 +2,18 @@ import { NextResponse } from "next/server";
 import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
 export async function GET(req) {
-  if (!process.env.TMDB_TOKEN) {
-    return NextResponse.json(
-      { message: "Missing Environment Variables" },
-      { status: 500 },
-    );
-  }
-
-  const { searchParams } = new URL(req.url);
-  const page = Math.max(1, Number(searchParams.get("page") || 1));
-  const language = searchParams.get("language") || "en-US";
-
   try {
+    if (!process.env.TMDB_TOKEN) {
+      return NextResponse.json(
+        { message: "Missing Environment Variables" },
+        { status: 500 },
+      );
+    }
+
+    const { searchParams } = new URL(req.url);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const language = searchParams.get("language") || "en-US";
+
     const { data } = await tmdbServer.get("/movie/popular", {
       params: { language, page },
     });
