@@ -142,7 +142,7 @@ const MovieDetails = ({
           </div>
 
           <div className="mt-4 sm:mt-5">
-            <MovieGrid movies={similarMovies} />
+            <MovieGrid movies={similarMovies} limit={5} />
           </div>
         </div>
       </div>
