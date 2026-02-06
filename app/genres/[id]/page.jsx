@@ -33,7 +33,7 @@ export default function Page() {
         setLoadingGenres(true);
         setGenreError(null);
 
-        const data = await moviesService.genres();
+       const data = await moviesService.genres();
         if (!alive) return;
 
         const list = data?.genres || [];

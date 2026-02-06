@@ -1,103 +1,80 @@
 "use client";
-import React, { useEffect, useState } from "react";
 
+import React, { useEffect, useState } from "react";
 import MovieDetails from "@/components/ui/MovieDetails";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
-
 import { moviesService } from "@/lib/services/movies";
-
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 
 export default function Page() {
-  const { id } = useParams();
-
+  const params = useParams();
   const router = useRouter();
+
+  const movieId = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
   const [crew, setCrew] = useState([]);
   const [casts, setCasts] = useState([]);
-  const [details, setDetails] = useState([]);
+  const [details, setDetails] = useState(null);
   const [similiar, setSimiliar] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [genresCount, setGenresCount] = useState();
   const [video, setVideo] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const pushToSimilarMoviePage = (id) => {
-    router.push(`/similiar/${id}`);
+    router.push(`/similar/${id}`);
   };
+
   useEffect(() => {
-    const getCredits = async () => {
+    if (!movieId) return;
+
+    let cancelled = false;
+
+    (async () => {
       try {
         setLoading(true);
+        setError(null);
 
-        moviesService.
+        const [creditData, detailData, trailerData, similarData] =
+          await Promise.all([
+            moviesService.credits(movieId),
+            moviesService.details(movieId),
+            moviesService.trailer(movieId),
+            moviesService.similar(movieId),
+          ]);
 
-        setCrew(res.data.crew);
-        setCasts(res.data.cast);
-      } catch (err) {
-        setError("failed:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getCredits();
+        if (cancelled) return;
 
-    const getMovDetails = async () => {
-      try {
-        const res = await axios.get(`/api/tmdb/movies/${id}/details`);
-        setDetails(res.data ?? []);
-        setGenresCount(res?.data?.genres?.length);
+        setCrew(creditData?.crew ?? []);
+        setCasts(creditData?.cast ?? []);
+        setDetails(detailData ?? null);
+        setVideo(trailerData?.results ?? trailerData ?? []);
+        setSimiliar(similarData?.results ?? similarData ?? []);
       } catch (e) {
-        setError(e);
-        setDetails([]);
-      }
-    };
-    getMovDetails();
-
-    const getVideo = async () => {
-      try {
-        const res = await axios.get(`/api/tmdb/movies/${id}/trailer`);
-
-        setVideo(res.data.results ?? []);
-      } catch (err) {
-        setError(err);
+        if (cancelled) return;
+        setError(e?.message || "Failed to load movie");
+        setCrew([]);
+        setCasts([]);
+        setDetails(null);
         setVideo([]);
-      }
-    };
-    getVideo();
-
-    const getSimiliar = async () => {
-      try {
-        const res = await axios.get(`/api/tmdb/movies/${id}/similiar`);
-        setSimiliar(res.data.results ?? []);
-      } catch (err) {
-        setError(err);
         setSimiliar([]);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    };
-    getSimiliar();
-  }, [id]);
+    })();
 
+    return () => {
+      cancelled = true;
+    };
+  }, [movieId]);
+   
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
-
       {error && <p className="text-destructive px-4 sm:px-6">{error}</p>}
-
-      <MovieDetails
-        id={id}
-        movie={details}
-        crew={crew}
-        casts={casts}
-        similiarData={similiar}
-        trailer={video}
-        pushToSimilarMoviePage={pushToSimilarMoviePage}
-        isLoading={loading}
-        // genresCount={genresCount}
-      />
-
+      <MovieDetails movieId={movieId} />
+      {/* movie = null, crew = [], casts = [], similiarData = [], trailer = [], id, */}
+      {/* pushToSimilarMoviePage, loading = false, */}
       <Footer />
     </div>
   );

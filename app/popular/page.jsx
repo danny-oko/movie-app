@@ -25,7 +25,7 @@ const Page = () => {
 
     const getData = async () => {
       try {
-        MoviesService.popular(page).then((data) => {
+        moviesService.popular(page).then((data) => {
           setMovies(data?.results || []);
           setTotalPages(data?.total_pages || 1);
         });

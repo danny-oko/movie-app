@@ -1,34 +1,27 @@
 import { NextResponse } from "next/server";
+import axios from "axios";
 import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
-export async function GET(req, { params }) {
-  const { id } = params;
-
-  if (!process.env.TMDB_TOKEN) {
-    return NextResponse.json(
-      { message: "Missing environment variables" },
-      { status: 500 },
-    );
-  }
-
-  const { searchParams } = new URL(req.url);
-  const page = Math.max(1, Number(searchParams.get("page") || 1));
-  const language = searchParams.get("language") || "en-US";
-
+export async function GET(_req, { params }) {
   try {
-    const { data } = await tmdbServer.get(`/movie/${id}/similar`, {
-      params: { language, page },
-    });
+    const { id } = await params;
 
+    if (!process.env.TMDB_TOKEN) {
+      return NextResponse.json(
+        { message: "Missing Environment Variables" },
+        { status: 500 },
+      );
+    }
+
+    const { data } = await tmdbServer.get(`/movie/${id}/similar`, {
+      params: { language: "en-Us" },
+    });
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    const status = err?.response?.status || 500;
+    const status = err?.response?.status ?? 500;
     const message =
-      err?.response?.data?.status_message ||
-      err?.response?.data?.message ||
-      err?.message ||
-      "Failed to fetch similar movies";
+      err?.response?.data?.status_message ?? err?.message ?? "Server error";
 
-    return NextResponse.json({ message }, { status });
+    return NextResponse.json({ error: message }, { status });
   }
 }

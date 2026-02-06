@@ -1,30 +1,27 @@
 import { NextResponse } from "next/server";
+import axios from "axios";
 import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
-export async function GET(req) {
-  if (!process.env.TMDB_TOKEN) {
-    return NextResponse.json(
-      { message: "Missing Environment Variables" },
-      { status: 500 },
-    );
-  }
-
+export async function GET(_req, { params }) {
   try {
-    const { data } = await tmdbServer.get(`/movie/${movieId}`, {
+    const { id } = await params;
+
+    if (!process.env.TMDB_TOKEN) {
+      return NextResponse.json(
+        { message: "Missing Environment Variables" },
+        { status: 500 },
+      );
+    }
+
+    const { data } = await tmdbServer.get(`/movie/${id}`, {
       params: { language: "en-Us" },
     });
-
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
-    return NextResponse.json(
-      {
-        message:
-          err?.response?.data?.status_message ||
-          err?.response?.data?.message ||
-          err?.message ||
-          "Failed to fetch now playing",
-      },
-      { status: err?.response?.status || 500 },
-    );
+    const status = err?.response?.status ?? 500;
+    const message =
+      err?.response?.data?.status_message ?? err?.message ?? "Server error";
+
+    return NextResponse.json({ error: message }, { status });
   }
 }

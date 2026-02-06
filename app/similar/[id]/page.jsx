@@ -10,7 +10,7 @@ import Pager from "@/components/ui/Pager";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
-import { moviesService } from "@/lib/services/movies";
+import { movieService } from "@/lib/services/movies";
 
 export default function Page() {
   const { id } = useParams();
@@ -32,13 +32,10 @@ export default function Page() {
         setLoading(true);
         setError(null);
 
-        const { data } = await axios.get(
-          `/api/tmdb/movies/${id}/similiar?page=${page}`,
-          { signal: controller.signal },
-        );
-
-        setMovies(data?.results ?? []);
-        setTotalPages(data?.total_pages ?? 1);
+        movieService.similar(page).then((data) => {
+          setMovies(data?.results ?? []);
+          setTotalPages(data?.total_pages ?? 1);
+        });
       } catch (e) {
         if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;
         setError(e?.message || "Failed to load");

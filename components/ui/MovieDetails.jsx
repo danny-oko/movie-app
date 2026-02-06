@@ -7,7 +7,7 @@ import GenreChips from "./GenreChips";
 import MovieGridSimiliar from "./MovieGridSimiliar";
 
 const MovieDetails = ({
-  movie = null,
+  movie,
   crew = [],
   casts = [],
   similiarData = [],
