@@ -1,34 +1,32 @@
 import { NextResponse } from "next/server";
-import axios from "axios";
+import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
 export async function GET(req) {
-  const token = process.env.TMDB_TOKEN;
-  if (!token) {
-    return NextResponse.json("Error: Missing Environment Variables", {
-      status: 500,
-
-    });
-  }
-  const { searchParams } = new URL(req.url);
-  const pageRaw = searchParams.get("page") || "1";
-  const page = Math.max(1, Number(pageRaw) || 1);
-
   try {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`,
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    if (!process.env.TMDB_TOKEN) {
+      return NextResponse.json(
+        { message: "Missing Environment Variables" },
+        { status: 500 },
+      );
+    }
+
+    const { searchParams } = new URL(req.url);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const language = searchParams.get("language") || "en-US";
+
+    const { data } = await tmdbServer.get("/movie/popular", {
+      params: { language, page },
+    });
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status || 500;
-    const message = err?.response?.status_message || "Internal Server Error!";
+    const message =
+      err?.response?.data?.status_message ||
+      err?.response?.data?.message ||
+      err?.message ||
+      "Failed to fetch popular movies";
 
-    return NextResponse.json({ status }, { message });
+    return NextResponse.json({ message }, { status });
   }
 }

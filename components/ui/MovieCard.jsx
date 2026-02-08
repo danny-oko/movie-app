@@ -35,7 +35,7 @@ const MovieCard = ({ movie, isLoading = false }) => {
 
   return (
     <Link
-      href={`/pages/${movie.id}`}
+      href={`/${movie.id}`}
       className="group overflow-hidden rounded-lg sm:rounded-xl border border-border bg-card hover:shadow-sm transition text-card-foreground block touch-manipulation"
     >
       <figure className="overflow-hidden">
