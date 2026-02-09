@@ -25,8 +25,8 @@ export default function RootLayout({ children, team, analytics }) {
           disableTransitionOnChange
         >
           <NuqsAdapter>{children}</NuqsAdapter>
-          {team}
-          {analytics}
+          {/* {team} */}
+          {/* {analytics} */}
         </ThemeProvider>
       </body>
     </html>
