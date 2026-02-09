@@ -13,7 +13,7 @@ export const metadata = {
   description: "Movie app",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, team, analytics }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -25,6 +25,8 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <NuqsAdapter>{children}</NuqsAdapter>
+          {team}
+          {analytics}
         </ThemeProvider>
       </body>
     </html>
