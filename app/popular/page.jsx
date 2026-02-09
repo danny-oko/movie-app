@@ -22,31 +22,34 @@ const Page = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const controller = new AbortController();
+useEffect(() => {
+  let alive = true;
+  setLoading(true);
+  setError(null);
 
-    (async () => {
-      try {
-        const data = await moviesService.popular(page);
-        setMovies(data?.results || []);
-        setTotalPages(data?.total_pages || 1);
-      } catch (e) {
-        if (
-          axios.isCancel?.(e) ||
-          e.name === "CanceledError" ||
-          e.code === "ERR_CANCELED"
-        ) {
-          setError(e?.message || "Failed to load");
-        }
-      } finally {
-        setLoading(false);
-      }
-    })();
+  (async () => {
+    try {
+      const data = await moviesService.popular(page);
+      if (!alive) return;
+      setMovies(data?.results || []);
+      setTotalPages(data?.total_pages || 1);
+    } catch (e) {
+      const isCanceled =
+        axios.isCancel?.(e) ||
+        e?.name === "CanceledError" ||
+        e?.code === "ERR_CANCELED";
 
-    return () => {
-      controller.abort();
-    };
-  }, [page]);
+      if (!isCanceled && alive) setError(e?.message || "Failed to load");
+    } finally {
+      if (alive) setLoading(false);
+    }
+  })();
+
+  return () => {
+    alive = false;
+  };
+}, [page]);
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
