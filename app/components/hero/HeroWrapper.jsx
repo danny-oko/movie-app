@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { moviesService } from "@/lib/services/movies";
 import { useParams } from "next/navigation";
-
-import Slider from "./Slider";
+import HeroSkeleton from "@/components/ui/HeroSkeleton";
 import TrailerDialog from "./Dialog";
 import HeroCarousel from "./Carousel";
 
@@ -45,13 +44,13 @@ const Hero = () => {
     setActiveMovieId(null);
   };
 
-  if (loading) {
-    return <p>loading...</p>;
-  }
-
   return (
     <div>
-      <HeroCarousel movies={movies} onWatchTrailer={handleWatchTrailer} />
+      <HeroCarousel
+        movies={movies}
+        onWatchTrailer={handleWatchTrailer}
+        loading={loading}
+      />
       <TrailerDialog
         onClose={handleCloseTrailer}
         open={trailerOpen}

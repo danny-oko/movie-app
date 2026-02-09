@@ -12,22 +12,27 @@ import { Button } from "@/components/ui/button";
 import MovieGrid from "@/components/ui/MovieGrid";
 
 import Pager from "@/components/ui/Pager";
+import { useQueryState, parseAsInteger } from "nuqs";
 
 const Page = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   useEffect(() => {
     const controller = new AbortController();
-    const run = async () => {
+
+    (async () => {
       try {
-        moviesService.popular(page).then((data) => {
-          setMovies(data?.results || []);
-          setTotalPages(data?.total_pages || 1);
-        });
+        setLoading(true);
+        setError(false);
+
+        const data = await moviesService.popular(page);
+
+        setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
       } catch (e) {
         if (
           axios.isCancel?.(e) ||
@@ -39,8 +44,7 @@ const Page = () => {
       } finally {
         setLoading(false);
       }
-    };
-    run();
+    })();
 
     return () => {
       controller.abort();
@@ -53,7 +57,6 @@ const Page = () => {
 
       <main className="flex-1">
         <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
-          {loading && <p className="text-foreground">Loading...</p>}
           {error && <p className="text-destructive">{error}</p>}
 
           <aside className="flex flex-row items-center justify-between gap-4">

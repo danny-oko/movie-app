@@ -84,12 +84,6 @@ export default function TrailerDialog({ open, movieId, onClose }) {
         </VisuallyHidden>
 
         <div className="relative h-full w-full bg-black">
-          {loading && (
-            <div className="absolute inset-0 flex items-center justify-center text-white">
-              Loading trailer...
-            </div>
-          )}
-
           {!loading && !embedUrl && (
             <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-white">
               Trailer not available

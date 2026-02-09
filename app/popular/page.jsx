@@ -5,6 +5,8 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { moviesService } from "@/lib/services/movies";
 
+import { useQueryState, parseAsInteger } from "nuqs";
+
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
@@ -16,19 +18,18 @@ import Pager from "@/components/ui/Pager";
 const Page = () => {
   const [error, setError] = useState(null);
   const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    const getData = async () => {
+    (async () => {
       try {
-        moviesService.popular(page).then((data) => {
-          setMovies(data?.results || []);
-          setTotalPages(data?.total_pages || 1);
-        });
+        const data = await moviesService.popular(page);
+        setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
       } catch (e) {
         if (
           axios.isCancel?.(e) ||
@@ -40,8 +41,7 @@ const Page = () => {
       } finally {
         setLoading(false);
       }
-    };
-    getData();
+    })();
 
     return () => {
       controller.abort();

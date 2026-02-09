@@ -1,5 +1,6 @@
 "use client";
 
+import HeroSkeleton from "@/components/ui/HeroSkeleton";
 import {
   Carousel,
   CarouselContent,
@@ -8,8 +9,11 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Slider from "./Slider";
+import React, { useEffect, useState } from "react";
+export default function HeroCarousel({ movies, onWatchTrailer, loading }) {
+  let isLoading = !movies.length;
+  if (isLoading) return <HeroSkeleton />;
 
-export default function HeroCarousel({ movies, onWatchTrailer }) {
   return (
     <Carousel className="h-full w-full">
       <CarouselContent className="h-full">

@@ -12,13 +12,14 @@ import { Button } from "@/components/ui/button";
 import MovieGrid from "@/components/ui/MovieGrid";
 
 import Pager from "@/components/ui/Pager";
+import { useQueryState, parseAsInteger } from "nuqs";
 
 const Page = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   useEffect(() => {
     const controller = new AbortController();
@@ -29,10 +30,11 @@ const Page = () => {
       try {
         setLoading(true);
         setError(null);
-        moviesService.popular(page).then((data) => {
-          setMovies(data?.results || []);
-          setTotalPages(data?.total_pages || 1);
-        });
+
+        const data = await moviesService.popular(page);
+
+        setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
       } catch (e) {
         if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;
         setError(e?.message || "Failed to load");

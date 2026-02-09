@@ -17,7 +17,7 @@ const Modal = ({ genres = [], onSelect }) => {
         <div className="flex flex-wrap gap-2 sm:gap-3 max-h-[min(190px,40vh)] overflow-auto pr-1">
           {genres.map((g) => (
             <Link
-              href={`/pages/genres/${g.id}`}
+              href={`/genres/${g.id}`}
               key={g.id}
               type="button"
               onClick={() => onSelect(g.name)}
