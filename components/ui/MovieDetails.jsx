@@ -43,8 +43,6 @@ const MovieDetails = ({
     ? `${imgBaseUrl}${movie.poster_path}`
     : null;
 
-  console.log("movie", similarMovies);
-
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-12">

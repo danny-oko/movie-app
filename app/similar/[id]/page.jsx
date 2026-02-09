@@ -10,8 +10,8 @@ import Pager from "@/components/ui/Pager";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 
-import { useQueryState, parseAsInteger } from "nuqs";
 import { moviesService } from "@/lib/services/movies";
+import { useQueryState, parseAsInteger } from "nuqs";
 
 export default function Page() {
   const params = useParams();
@@ -28,13 +28,14 @@ export default function Page() {
     if (!id) return;
 
     const controller = new AbortController();
+
     (async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const data = await moviesService.similar(page);
-        setMovies(data?.reults ?? []);
+        const data = await moviesService.similar(id, page);
+        setMovies(data?.results ?? []);
         setTotalPages(data?.total_pages ?? 1);
       } catch (e) {
         if (e.code === "ERR_CANCELED" || e.name === "CanceledError") return;

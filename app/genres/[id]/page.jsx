@@ -10,11 +10,12 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 
 import { useParams } from "next/navigation";
 import { moviesService } from "@/lib/services/movies";
+import { useQueryState, parseAsInteger } from "nuqs";
 
 export default function Page() {
   const { id } = useParams();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [totalPages, setTotalPages] = useState(1);
 
   const [genres, setGenres] = useState([]);
@@ -39,7 +40,7 @@ export default function Page() {
 
         const list = data?.genres || [];
         setGenres(list);
-        setGenresCount(list.length || 8);
+        setGenresCount(list.length);
       } catch (e) {
         if (!alive) return;
         setGenreError(e?.message || "Failed to Load Genres");

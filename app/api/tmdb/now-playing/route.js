@@ -17,7 +17,7 @@ export async function GET() {
   } catch (err) {
     const status = err?.response?.status || 500;
     const message =
-      err?.response?.data?.error_message || error?.message || "Server Error";
+      err?.response?.data?.error_message || err?.message || "Server Error";
     return NextResponse({ status }, { message });
   }
 }

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import axios from "axios";
 import { tmdbServer } from "@/lib/tmdb/tmdbServer";
 
-export async function GET(_req, { params }) {
+export async function GET(req, { params }) {
   try {
     const { id } = await params;
 
@@ -13,9 +12,14 @@ export async function GET(_req, { params }) {
       );
     }
 
+    const { searchParams } = new URL(req.url);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const language = searchParams.get("language") || "en-US";
+
     const { data } = await tmdbServer.get(`/movie/${id}/similar`, {
-      params: { language: "en-Us" },
+      params: { language, page },
     });
+
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     const status = err?.response?.status ?? 500;

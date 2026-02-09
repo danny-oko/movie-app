@@ -10,6 +10,7 @@ import GenreChips from "@/components/ui/GenreChips";
 import Pager from "@/components/ui/Pager";
 
 import { moviesService } from "@/lib/services/movies";
+import { useQueryState, parseAsInteger } from "nuqs";
 
 const LS_KEY = "search_term";
 
@@ -28,7 +29,7 @@ export default function SearchResultsPage() {
     }
   }, []);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
