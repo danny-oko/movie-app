@@ -5,11 +5,14 @@ import axios from "axios";
 import debounce from "lodash.debounce";
 import SearchDropdown from "./SearchDropDown";
 
-
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Search } from "lucide-react";
 
 const LS_KEY = "search_term";
-
-
 
 export default function Input() {
   const [text, setText] = useState("");
@@ -142,27 +145,23 @@ export default function Input() {
       className="relative w-full sm:w-[250px] md:w-[370px] lg:w-[380px]"
     >
       <div className="relative">
-        <input
-          type="text"
-          value={text}
-          onChange={handleChange}
-          onFocus={() => {
-            if (text.trim()) setOpen(true);
-          }}
-          className="w-full h-[36px] p-2 pr-9 border rounded-lg text-sm"
-          placeholder="🔎 type to search"
-        />
-
-        {text ? (
-          <button
-            type="button"
-            onClick={clearAll}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground text-sm"
-            aria-label="Clear"
-          >
-            ✕
-          </button>
-        ) : null}
+        <InputGroup className="max-w-xs">
+          <InputGroupInput
+            placeholder="Search..."
+            type="text"
+            value={text}
+            onChange={handleChange}
+            onFocus={() => {
+              if (text.trim()) setOpen(true);
+            }}
+          />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            {movies.length} results
+          </InputGroupAddon>
+        </InputGroup>
       </div>
 
       {open && (text.trim() || loading) && (

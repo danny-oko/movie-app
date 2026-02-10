@@ -145,7 +145,7 @@ export default function SearchResultsPage() {
                   activeId={null}
                   isLoading={loadingGenres}
                   error={genreError}
-                  baseHref="/pages/genres"
+                  baseHref="/genres"
                   skeletonCount={genresCount}
                 />
               </div>

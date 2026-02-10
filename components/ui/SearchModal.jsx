@@ -37,7 +37,7 @@ const SearchModal = ({ movie, isLoading = false }) => {
   return (
     <Link
       href={`/pages/${movie.id}`}
-      className="group overflow-hidden rounded-xl border border-zinc-200 bg-white hover:shadow-sm transition"
+      className="group overflow-hidden rounded-xl border border-zinc-200 bg-white hover:shadow-sm transition w-[554px] h-[116px]"
     >
       <figure className="overflow-hidden">
         {poster ? (

@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Star } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const LS_KEY = "search_term";
 
@@ -19,57 +21,73 @@ export default function SearchDropdown({
       const t = (term || "").trim();
       if (t) localStorage.setItem(LS_KEY, t);
     } catch {
-      // zza lai2 haha
+      console.log("couldn't find movies");
     }
   };
 
   return (
     <div
       className="
-        absolute left-0 right-0 mt-2 z-50
+        absolute left-1/2 top-full z-50 mt-2
+        -translate-x-1/2
+        w-[420px] max-w-[calc(100vw-2rem)]
         overflow-hidden
         border border-border bg-card shadow-lg
-        rounded-xl sm:rounded-2xl
-      "
+        rounded-xl"
       role="dialog"
       aria-label="Search results"
     >
-      <div className="max-h-[60vh] sm:max-h-[360px] overflow-y-auto">
+      <div className="max-h-[420px] overflow-y-auto">
         {loading ? (
-          <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
-            <RowSkeleton />
-            <RowSkeleton />
-            <RowSkeleton />
-            <RowSkeleton />
+          <div className="p-0">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i}>
+                <RowSkeleton />
+                {i !== 3 ? (
+                  <div className="px-4 py-2">
+                    <Separator />
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         ) : error ? (
           <div className="p-3 text-sm text-red-500">{error}</div>
         ) : empty ? (
           <div className="p-3 text-sm text-muted-foreground">{empty}</div>
         ) : (
-          <div className="p-2 sm:p-3 space-y-1 sm:space-y-2">
-            {movies.slice(0, 8).map((m) => (
-              <ResultRow
-                key={m.id}
-                movie={m}
-                onClose={onClose}
-                onSaveTerm={() => saveTerm(query)}
-              />
+          <div className="p-0">
+            {movies.slice(0, 8).map((m, idx) => (
+              <div key={m.id}>
+                <ResultRow
+                  movie={m}
+                  onClose={onClose}
+                  onSaveTerm={() => saveTerm(query)}
+                />
+                {idx !== Math.min(movies.length, 8) - 1 ? (
+                  <div className="px-4 py-2">
+                    <Separator />
+                  </div>
+                ) : null}
+              </div>
             ))}
 
             {movies.length > 8 ? (
-              <Link
-                href={`/pages/searchResults?query=${encodeURIComponent(
-                  query,
-                )}&page=1`}
-                onClick={() => {
-                  saveTerm(query); 
-                  onClose();
-                }}
-                className="block w-full mt-2 text-sm py-2 sm:py-2.5 rounded-lg hover:bg-muted text-muted-foreground text-center"
-              >
-                See all results
-              </Link>
+              <>
+                <div className="h-px w-full bg-border" />
+                <Link
+                  href={`/searchResults?query=${encodeURIComponent(
+                    query,
+                  )}&page=1`}
+                  onClick={() => {
+                    saveTerm(query);
+                    onClose();
+                  }}
+                  className="block w-full px-4 py-3 text-sm text-muted-foreground hover:bg-muted text-left"
+                >
+                  See all results for "{query}"
+                </Link>
+              </>
             ) : null}
           </div>
         )}
@@ -93,25 +111,14 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
 
   return (
     <Link
-      href={`/pages/${movie.id}`}
+      href={`/${movie.id}`}
       onClick={() => {
-        onSaveTerm?.(); 
+        onSaveTerm?.();
         onClose();
       }}
-      className="
-        flex items-center gap-2 sm:gap-3
-        p-2 sm:p-3
-        rounded-lg
-        hover:bg-muted transition
-      "
+      className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition h-auto"
     >
-      <div
-        className="
-          shrink-0 overflow-hidden bg-muted
-          rounded-md sm:rounded-lg
-          w-9 h-12 sm:w-10 sm:h-14
-        "
-      >
+      <div className="shrink-0 overflow-hidden bg-muted rounded-md w-[68px] h-[100px]">
         {poster ? (
           <img
             src={poster}
@@ -123,14 +130,19 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
         )}
       </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold truncate text-sm sm:text-base">{title}</p>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          ⭐ {rating} <span className="mx-2">•</span> {year}
-        </p>
+      <div className="flex-1 gap-2 flex-col items-around">
+        <p className="font-semibold truncate text-sm">{title}</p>
+        <div className="text-xs text-muted-foreground">
+          <div className="flex gap-1 mt-1">
+            <Star className="w-3 h-3 text-yellow-500" />
+            <span className="text-foreground">{rating}</span>
+            <span>/10</span>
+          </div>
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground ">{year}</p>
       </div>
 
-      <div className="hidden sm:block text-xs text-muted-foreground hover:text-foreground">
+      <div className="text-xs mt-10 text-muted-foreground hover:text-foreground">
         See more →
       </div>
     </Link>
@@ -139,11 +151,23 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
 
 function RowSkeleton() {
   return (
-    <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3">
-      <Skeleton className="w-9 h-12 sm:w-10 sm:h-14 rounded-md sm:rounded-lg" />
-      <div className="flex-1 space-y-2">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-3 w-1/3" />
+    <div className="flex items-center gap-3 px-4 py-2">
+      <Skeleton className="shrink-0 rounded-md w-[68px] h-[100px]" />
+
+      <div className="flex-1 flex flex-col">
+        <Skeleton className="h-4 w-[70%]" />
+
+        <div className="mt-2 flex items-center gap-1">
+          <Skeleton className="h-3 w-3 rounded-sm" />
+          <Skeleton className="h-3 w-10" />
+          <Skeleton className="h-3 w-8" />
+        </div>
+
+        <Skeleton className="mt-3 h-3 w-10" />
+      </div>
+
+      <div className="mt-10">
+        <Skeleton className="h-3 w-16" />
       </div>
     </div>
   );

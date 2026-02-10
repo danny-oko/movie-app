@@ -7,6 +7,9 @@ import { ModeToggle } from "@/components/ModeToggle";
 import Modal from "./Modal";
 import Input from "./search/Input";
 
+import { FaArrowDown } from "react-icons/fa";
+import { MdArrowDropDown } from "react-icons/md"; 
+
 const Header = () => {
   const [genres, setGenres] = useState([]);
   const [open, setOpen] = useState(false);
@@ -46,7 +49,7 @@ const Header = () => {
 
   return (
     <header className="w-full border-b border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800">
-      <div className="mx-auto flex h-14 min-h-14 w-full max-w-[1920px] flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:gap-3 md:px-8 lg:px-12 xl:px-32">
+      <div className="mx-auto flex h-14 min-h-14 w-full w-[80%] flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:gap-3 md:px-8 lg:px-12 xl:px-32">
         <h1
           onClick={handleHome}
           className="text-base font-extrabold text-zinc-900 dark:text-zinc-100 cursor-pointer shrink-0 sm:text-lg"
@@ -55,7 +58,7 @@ const Header = () => {
         </h1>
 
         <div
-          className="relative flex flex-1 min-w-0 max-w-full items-center justify-end gap-2 sm:flex-initial sm:max-w-none"
+          className="relative flex flex-1 min-w-0 max-w-full items-center justify-end sm:flex-initial sm:max-w-none"
           ref={wrapperRef}
         >
           <button
@@ -63,12 +66,8 @@ const Header = () => {
             onClick={() => setOpen((v) => !v)}
             className="h-9 min-w-0 w-20 sm:min-w-[120px] select-none rounded-lg border border-zinc-200 bg-white px-2 sm:px-3 text-xs sm:text-sm text-zinc-800 flex items-center justify-between gap-1 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100"
           >
+            <MdArrowDropDown className=" w-6 h-6" />
             <span className="truncate">{selectedGenre}</span>
-            <span
-              className={`text-base transition shrink-0 ${open ? "rotate-180" : ""}`}
-            >
-              ▾
-            </span>
           </button>
 
           <div className="w-full min-w-0 max-w-[180px] sm:max-w-[260px] md:max-w-[340px] lg:max-w-[380px]">

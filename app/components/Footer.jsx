@@ -2,12 +2,12 @@
 
 const Footer = () => {
   return (
-    <footer className="w-full min-h-[200px] flex items-center justify-center bg-zinc-800 py-8 sm:py-10 md:min-h-[240px] lg:min-h-[280px]">
-      <aside className="w-full max-w-[1280px] px-4 sm:px-6 md:px-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+    <footer className="w-full min-h-[200px] flex items-center justify-center bg-zinc-800 sm:py-10 md:min-h-[240px] lg:min-h-[280px]">
+      <aside className="w-[80%] grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
         <section className="text-text-white flex flex-col gap-2">
           <p className="font-semibold">🎥 MovieZ</p>
           <p className="text-sm sm:text-base">
-            © 2024 Movie Z. All Rights Reserved.
+            © 2026 Movie Z. All Rights Reserved.
           </p>
         </section>
 
