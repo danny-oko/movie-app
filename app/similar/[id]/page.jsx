@@ -53,7 +53,7 @@ export default function Page() {
       <Header />
 
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
+        <div className="mx-auto w-[80vw] max-w-none px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
           <div className="flex flex-row items-center justify-between gap-4">
             <h1 className="text-xl font-semibold text-foreground sm:text-2xl">
               Similar

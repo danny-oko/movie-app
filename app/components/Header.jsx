@@ -48,7 +48,7 @@ const Header = () => {
 
   return (
     <header className="w-full border-b border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800">
-      <div className="mx-auto flex h-14 min-h-14 w-full w-[80%] flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:gap-3 md:px-8 lg:px-12 xl:px-32">
+      <div className="mx-auto flex h-14 min-h-14 w-[80vw] max-w-none flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 sm:gap-3 md:px-8 lg:px-10">
         <h1
           onClick={handleHome}
           className="text-base font-extrabold text-zinc-900 dark:text-zinc-100 cursor-pointer shrink-0 sm:text-lg"

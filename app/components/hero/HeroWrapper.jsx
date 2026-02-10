@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { moviesService } from "@/lib/services/movies";
-import { useParams } from "next/navigation";
-import HeroSkeleton from "@/components/ui/HeroSkeleton";
 import TrailerDialog from "./Dialog";
 import HeroCarousel from "./Carousel";
 
@@ -17,21 +15,30 @@ const Hero = () => {
   const [activeMovieId, setActiveMovieId] = useState(null);
 
   useEffect(() => {
+    let alive = true;
+
     (async () => {
       try {
         setLoading(true);
         setError(null);
 
-        moviesService.nowPlaying(page).then((data) => {
-          setMovies(data?.results);
-        });
-      } catch (error) {
-        setError(error.message || "Failed to load");
-        setMovies([]);
+        const data = await moviesService.nowPlaying(page);
+        if (!alive) return;
+
+        setMovies(data?.results || []);
+      } catch (err) {
+        if (alive) {
+          setError(err?.message || "Failed to load");
+          setMovies([]);
+        }
       } finally {
-        setLoading(false);
+        if (alive) setLoading(false);
       }
     })();
+
+    return () => {
+      alive = false;
+    };
   }, [page]);
 
   const handleWatchTrailer = (movieId) => {
@@ -45,18 +52,25 @@ const Hero = () => {
   };
 
   return (
-    <div>
-      <HeroCarousel
-        movies={movies}
-        onWatchTrailer={handleWatchTrailer}
-        loading={loading}
-      />
+    <section className="w-full">
+      <div className="mx-auto w-[80vw] max-w-none px-4 sm:px-6 md:px-8">
+        {error && <p className="text-destructive mb-3">{error}</p>}
+
+        <div className="w-full">
+          <HeroCarousel
+            movies={movies}
+            onWatchTrailer={handleWatchTrailer}
+            loading={loading}
+          />
+        </div>
+      </div>
+
       <TrailerDialog
         onClose={handleCloseTrailer}
         open={trailerOpen}
         movieId={activeMovieId}
       />
-    </div>
+    </section>
   );
 };
 

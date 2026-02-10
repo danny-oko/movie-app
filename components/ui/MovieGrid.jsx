@@ -21,7 +21,7 @@ const MovieGrid = ({
   skeletonCount = 10,
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 md:gap-5 md:grid-cols-4 lg:gap-6 lg:grid-cols-5">
+    <div className="w-full grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 md:gap-5 md:grid-cols-4 lg:gap-6 lg:grid-cols-5">
       {isLoading
         ? Array.from({ length: skeletonCount }).map((_, i) => (
             <MovieCardSkeleton key={i} />

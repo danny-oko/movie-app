@@ -47,7 +47,7 @@ export default function PopularClient() {
   return (
     <div className="bg-background flex flex-col">
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
+        <div className="mx-auto w-[80vw] max-w-none px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
           {error && <p className="text-destructive">{error}</p>}
 
           <aside className="flex flex-row items-center justify-between gap-4">

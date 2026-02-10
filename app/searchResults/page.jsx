@@ -123,7 +123,7 @@ export default function SearchResultsPage() {
       <Header />
 
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 sm:py-8">
+        <div className="mx-auto w-[80vw] max-w-none px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
           <div className="px-2 sm:px-6 pt-4 sm:pt-6">
             <h1 className="text-xl font-bold">
               Results for “{storedQuery || "..."}”
