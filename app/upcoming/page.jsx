@@ -31,7 +31,7 @@ const Page = () => {
         setLoading(true);
         setError(null);
 
-        const data = await moviesService.popular(page);
+        const data = await moviesService.upcoming(page);
 
         setMovies(data?.results || []);
         setTotalPages(data?.total_pages || 1);

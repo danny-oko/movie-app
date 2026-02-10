@@ -5,7 +5,7 @@ import MovieCard from "./MovieCard";
 function MovieCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-lg sm:rounded-xl border border-border">
-      <Skeleton className="w-full aspect-2/3 rounded-none" />
+      <Skeleton className="w-full aspect-[2/3] rounded-none" />
       <div className="p-2 sm:p-3 space-y-2">
         <Skeleton className="h-3 sm:h-4 w-16 sm:w-20" />
         <Skeleton className="h-3 sm:h-4 w-3/4" />

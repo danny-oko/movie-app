@@ -28,12 +28,12 @@ export default function SearchDropdown({
   return (
     <div
       className="
-        absolute left-1/2 top-full z-50 mt-2
+        absolute left-1/2 top-12 z-50
         -translate-x-1/2
-        w-[420px] max-w-[calc(100vw-2rem)]
+        w-[min(720px,92vw)]
+        rounded-2xl border border-border bg-card shadow-xl
         overflow-hidden
-        border border-border bg-card shadow-lg
-        rounded-xl"
+      "
       role="dialog"
       aria-label="Search results"
     >
@@ -44,7 +44,7 @@ export default function SearchDropdown({
               <div key={i}>
                 <RowSkeleton />
                 {i !== 3 ? (
-                  <div className="px-4 py-2">
+                  <div className="px-6 py-2">
                     <Separator />
                   </div>
                 ) : null}
@@ -52,9 +52,9 @@ export default function SearchDropdown({
             ))}
           </div>
         ) : error ? (
-          <div className="p-3 text-sm text-red-500">{error}</div>
+          <div className="p-6 text-sm text-red-500">{error}</div>
         ) : empty ? (
-          <div className="p-3 text-sm text-muted-foreground">{empty}</div>
+          <div className="p-6 text-sm text-muted-foreground">{empty}</div>
         ) : (
           <div className="p-0">
             {movies.slice(0, 8).map((m, idx) => (
@@ -65,7 +65,7 @@ export default function SearchDropdown({
                   onSaveTerm={() => saveTerm(query)}
                 />
                 {idx !== Math.min(movies.length, 8) - 1 ? (
-                  <div className="px-4 py-2">
+                  <div className="px-6 py-2">
                     <Separator />
                   </div>
                 ) : null}
@@ -83,7 +83,7 @@ export default function SearchDropdown({
                     saveTerm(query);
                     onClose();
                   }}
-                  className="block w-full px-4 py-3 text-sm text-muted-foreground hover:bg-muted text-left"
+                  className="block w-full px-6 py-4 text-sm text-muted-foreground hover:bg-muted text-left"
                 >
                   See all results for "{query}"
                 </Link>
@@ -116,7 +116,7 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
         onSaveTerm?.();
         onClose();
       }}
-      className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition h-auto"
+      className="flex items-center gap-4 px-6 py-4 hover:bg-muted transition"
     >
       <div className="shrink-0 overflow-hidden bg-muted rounded-md w-[68px] h-[100px]">
         {poster ? (
@@ -130,19 +130,19 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
         )}
       </div>
 
-      <div className="flex-1 gap-2 flex-col items-around">
-        <p className="font-semibold truncate text-sm">{title}</p>
-        <div className="text-xs text-muted-foreground">
-          <div className="flex gap-1 mt-1">
-            <Star className="w-3 h-3 text-yellow-500" />
-            <span className="text-foreground">{rating}</span>
-            <span>/10</span>
-          </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold truncate text-base">{title}</p>
+
+        <div className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
+          <Star className="w-4 h-4 text-yellow-500" />
+          <span className="text-foreground">{rating}</span>
+          <span>/10</span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground ">{year}</p>
+
+        <p className="mt-2 text-sm text-muted-foreground">{year}</p>
       </div>
 
-      <div className="text-xs mt-10 text-muted-foreground hover:text-foreground">
+      <div className="text-sm text-muted-foreground hover:text-foreground whitespace-nowrap">
         See more →
       </div>
     </Link>
@@ -151,24 +151,22 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
 
 function RowSkeleton() {
   return (
-    <div className="flex items-center gap-3 px-4 py-2">
+    <div className="flex items-center gap-4 px-6 py-4">
       <Skeleton className="shrink-0 rounded-md w-[68px] h-[100px]" />
 
       <div className="flex-1 flex flex-col">
-        <Skeleton className="h-4 w-[70%]" />
+        <Skeleton className="h-5 w-[60%]" />
 
-        <div className="mt-2 flex items-center gap-1">
-          <Skeleton className="h-3 w-3 rounded-sm" />
-          <Skeleton className="h-3 w-10" />
-          <Skeleton className="h-3 w-8" />
+        <div className="mt-3 flex items-center gap-2">
+          <Skeleton className="h-4 w-4 rounded-sm" />
+          <Skeleton className="h-4 w-12" />
+          <Skeleton className="h-4 w-10" />
         </div>
 
-        <Skeleton className="mt-3 h-3 w-10" />
+        <Skeleton className="mt-3 h-4 w-12" />
       </div>
 
-      <div className="mt-10">
-        <Skeleton className="h-3 w-16" />
-      </div>
+      <Skeleton className="h-4 w-20" />
     </div>
   );
 }

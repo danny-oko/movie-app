@@ -7,8 +7,7 @@ import { ModeToggle } from "@/components/ModeToggle";
 import Modal from "./Modal";
 import Input from "./search/Input";
 
-import { FaArrowDown } from "react-icons/fa";
-import { MdArrowDropDown } from "react-icons/md"; 
+import { ChevronDown } from "lucide-react";
 
 const Header = () => {
   const [genres, setGenres] = useState([]);
@@ -58,16 +57,27 @@ const Header = () => {
         </h1>
 
         <div
-          className="relative flex flex-1 min-w-0 max-w-full items-center justify-end sm:flex-initial sm:max-w-none"
+          className="relative gap-2 flex flex-1 min-w-0 max-w-full items-center justify-end sm:flex-initial sm:max-w-none"
           ref={wrapperRef}
         >
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="h-9 min-w-0 w-20 sm:min-w-[120px] select-none rounded-lg border border-zinc-200 bg-white px-2 sm:px-3 text-xs sm:text-sm text-zinc-800 flex items-center justify-between gap-1 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100"
+            className="
+              h-9 min-w-[110px] w-auto
+              rounded-md
+              border border-zinc-200 bg-white
+              px-4
+              inline-flex items-center justify-center gap-2
+              text-zinc-900
+              dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100
+              shadow-sm
+            "
           >
-            <MdArrowDropDown className=" w-6 h-6" />
-            <span className="truncate">{selectedGenre}</span>
+            <ChevronDown className="h-4 w-4" />
+            <span className="whitespace-nowrap leading-none text-[14px]">
+              {selectedGenre}
+            </span>
           </button>
 
           <div className="w-full min-w-0 max-w-[180px] sm:max-w-[260px] md:max-w-[340px] lg:max-w-[380px]">

@@ -1,63 +1,70 @@
 "use client";
+
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-import MovieGrid from "@/components/ui/MovieGrid";
-import { Button } from "@/components/ui/button";
-
+import React, { useEffect, useState } from "react";
 import { moviesService } from "@/lib/services/movies";
+import { useQueryState, parseAsInteger } from "nuqs";
 
-const Page = ({ movies }) => {
-  const [movieList, setMovieList] = useState([]);
+import { Button } from "@/components/ui/button";
+import MovieGrid from "@/components/ui/MovieGrid";
+
+export default function PopularClient() {
   const [error, setError] = useState(null);
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
     let alive = true;
+    setLoading(true);
+    setError(null);
 
-    const run = async () => {
+    (async () => {
       try {
-        moviesService.upcoming(page).then((data) => {
-          setMovieList(data?.results ?? []);
-        });
+        const data = await moviesService.upcoming(page);
+        if (!alive) return;
+        setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
+      } catch (e) {
+        const isCanceled =
+          axios.isCancel?.(e) ||
+          e?.name === "CanceledError" ||
+          e?.code === "ERR_CANCELED";
 
-        if (!alive) return;
-      } catch (error) {
-        if (!alive) return;
-        setError("internal server error");
+        if (!isCanceled && alive) setError(e?.message || "Failed to load");
       } finally {
-        if (!alive) return;
-        setLoading(false);
+        if (alive) setLoading(false);
       }
-    };
-    run();
+    })();
+
     return () => {
       alive = false;
     };
-  }, []);
+  }, [page]);
 
   return (
-    <section className="bg-background">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        {error && <p className="text-destructive">{error}</p>}
+    <div className="bg-background flex flex-col">
+      <main className="flex-1">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
+          {error && <p className="text-destructive">{error}</p>}
 
-        <aside className="flex flex-row items-center justify-between gap-4">
-          <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
-            Upcoming
-          </h3>
-          <Button variant="seeMore" className="w-fit touch-manipulation">
-            <Link href={"/upcoming"}>See more →</Link>
-          </Button>
-        </aside>
+          <aside className="flex flex-row items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+              Upcoming
+            </h3>
 
-        <div className="mt-4 sm:mt-5">
-          <MovieGrid movies={movieList} isLoading={loading} />
+            <Button variant="seeMore" className="w-fit touch-manipulation">
+              <Link href={"/upcoming"}>See more →</Link>
+            </Button>
+          </aside>
+
+          <div className="mt-4 sm:mt-5">
+            <MovieGrid movies={movies} isLoading={loading} />
+          </div>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
   );
-};
-
-export default Page;
+}

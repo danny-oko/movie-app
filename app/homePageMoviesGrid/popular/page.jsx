@@ -1,69 +1,70 @@
 "use client";
+
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-import MovieGrid from "@/components/ui/MovieGrid";
-import { Button } from "@/components/ui/button";
-
+import React, { useEffect, useState } from "react";
 import { moviesService } from "@/lib/services/movies";
+import { useQueryState, parseAsInteger } from "nuqs";
 
-const Page = () => {
+import { Button } from "@/components/ui/button";
+import MovieGrid from "@/components/ui/MovieGrid";
+
+export default function PopularClient() {
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [movieList, setMovieList] = useState([]);
-  const [page, setPage] = useState(1);
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
+    setLoading(true);
+    setError(null);
 
-    const run = async () => {
+    (async () => {
       try {
-        setError(null);
-        setIsLoading(true);
-
-        moviesService.popular(page).then((data) => {
-          setMovieList(data?.results ?? []);
-        });
-
+        const data = await moviesService.popular(page);
         if (!alive) return;
+        setMovies(data?.results || []);
+        setTotalPages(data?.total_pages || 1);
       } catch (e) {
-        if (!alive) return;
-        setError("Failed to fetch data from TMDB");
-        setMovieList([]);
-      } finally {
-        if (!alive) return;
-        setIsLoading(false);
-      }
-    };
+        const isCanceled =
+          axios.isCancel?.(e) ||
+          e?.name === "CanceledError" ||
+          e?.code === "ERR_CANCELED";
 
-    run();
+        if (!isCanceled && alive) setError(e?.message || "Failed to load");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+
     return () => {
       alive = false;
     };
-  }, []);
+  }, [page]);
 
   return (
-    <section className="bg-background">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        {isLoading && <p className="text-foreground">Loading...</p>}
-        {error && <p className="text-destructive">{error}</p>}
+    <div className="bg-background flex flex-col">
+      <main className="flex-1">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
+          {error && <p className="text-destructive">{error}</p>}
 
-        <aside className="flex flex-row items-center justify-between gap-4">
-          <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
-            Popular
-          </h3>
-          <Button variant="seeMore" className="w-fit touch-manipulation">
-            <Link href={"/popular"}>See more →</Link>
-          </Button>
-        </aside>
+          <aside className="flex flex-row items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+              Popular
+            </h3>
 
-        <div className="mt-4 sm:mt-5">
-          <MovieGrid movies={movieList} isLoading={isLoading} />
+            <Button variant="seeMore" className="w-fit touch-manipulation">
+              <Link href={"/popular"}>See more →</Link>
+            </Button>
+          </aside>
+
+          <div className="mt-4 sm:mt-5">
+            <MovieGrid movies={movies} isLoading={loading} />
+          </div>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
   );
-};
-
-export default Page;
+}

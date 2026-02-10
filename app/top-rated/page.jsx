@@ -22,14 +22,12 @@ const Page = () => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   useEffect(() => {
-    const controller = new AbortController();
-
     (async () => {
       try {
         setLoading(true);
         setError(false);
 
-        const data = await moviesService.popular(page);
+        const data = await moviesService.topRated(page);
 
         setMovies(data?.results || []);
         setTotalPages(data?.total_pages || 1);
@@ -45,10 +43,6 @@ const Page = () => {
         setLoading(false);
       }
     })();
-
-    return () => {
-      controller.abort();
-    };
   }, [page]);
 
   return (
