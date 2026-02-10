@@ -97,9 +97,7 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
       ? movie.vote_average.toFixed(1)
       : "--";
 
-  const poster = movie?.poster_path
-    ? `${imgBaseUrl}${movie.poster_path}`
-    : null;
+  const poster = movie?.poster_path ? `${imgBaseUrl}${movie.poster_path}` : null;
 
   return (
     <Link
