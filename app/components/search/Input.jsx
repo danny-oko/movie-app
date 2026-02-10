@@ -14,7 +14,7 @@ import { Search } from "lucide-react";
 
 const LS_KEY = "search_term";
 
-export default function Input() {
+export default function Input({ showCount = true, className = "" }) {
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -51,7 +51,6 @@ export default function Input() {
 
   useEffect(() => () => debouncedSetQuery.cancel(), [debouncedSetQuery]);
 
-
   useEffect(() => {
     const onDown = (e) => {
       if (!wrapRef.current) return;
@@ -85,7 +84,6 @@ export default function Input() {
         setLoading(true);
         setEmpty(null);
         setError(null);
-
 
         const res = await axios.get(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
@@ -126,43 +124,30 @@ export default function Input() {
     } catch {}
   };
 
-  const clearAll = () => {
-    setText("");
-    setQuery("");
-    setMovies([]);
-    setEmpty(null);
-    setError(null);
-    setOpen(false);
-
-    try {
-      localStorage.removeItem(LS_KEY);
-    } catch {}
-  };
-
   return (
-    <div
-      ref={wrapRef}
-      className="relative w-full sm:w-[250px] md:w-[370px] lg:w-[380px]"
-    >
-      <div className="relative">
-        <InputGroup className="max-w-xs">
-          <InputGroupInput
-            placeholder="Search..."
-            type="text"
-            value={text}
-            onChange={handleChange}
-            onFocus={() => {
-              if (text.trim()) setOpen(true);
-            }}
-          />
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-          <InputGroupAddon align="inline-end">
+    <div ref={wrapRef} className={`relative w-full min-w-0 ${className}`}>
+      <InputGroup className="w-full min-w-0">
+        <InputGroupInput
+          className="min-w-0"
+          placeholder="Search"
+          type="text"
+          value={text}
+          onChange={handleChange}
+          onFocus={() => {
+            if (text.trim()) setOpen(true);
+          }}
+        />
+
+        <InputGroupAddon>
+          <Search className="h-4 w-4" />
+        </InputGroupAddon>
+
+        {showCount && (
+          <InputGroupAddon className="hidden sm:inline-flex" align="inline-end">
             {movies.length} results
           </InputGroupAddon>
-        </InputGroup>
-      </div>
+        )}
+      </InputGroup>
 
       {open && (text.trim() || loading) && (
         <SearchDropdown
