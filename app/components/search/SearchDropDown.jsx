@@ -3,93 +3,84 @@
 import React from "react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Star, ChevronRight } from "lucide-react";
 
 const LS_KEY = "search_term";
+const MAX_VISIBLE = 5;
 
 export default function SearchDropdown({
-  movies,
+  movies = [],
   loading,
   empty,
   error,
   onClose,
-  query,
+  query = "",
 }) {
   const saveTerm = (term) => {
     try {
       const t = (term || "").trim();
       if (t) localStorage.setItem(LS_KEY, t);
-    } catch {
-      console.log("couldn't find movies");
-    }
+    } catch {}
   };
+
+  const visible = movies.slice(0, MAX_VISIBLE);
+  const hasMore = movies.length > MAX_VISIBLE;
 
   return (
     <div
       className="
-        absolute left-1/2 top-12 z-50
+        absolute left-1/2 top-14 z-50
         -translate-x-1/2
-        w-[min(720px,92vw)]
+        w-[min(572px,92vw)]
         rounded-2xl border border-border bg-card shadow-xl
         overflow-hidden
       "
       role="dialog"
       aria-label="Search results"
     >
-      <div className="max-h-[420px] overflow-y-auto">
+      <div className="max-h-[min(720px,85vh)] overflow-y-auto">
         {loading ? (
-          <div className="p-0">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i}>
-                <RowSkeleton />
-                {i !== 3 ? (
-                  <div className="px-6 py-2">
-                    <Separator />
-                  </div>
-                ) : null}
-              </div>
+          <div className="divide-y divide-border">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <RowSkeleton key={i} />
             ))}
           </div>
         ) : error ? (
-          <div className="p-6 text-sm text-red-500">{error}</div>
+          <div className="p-6 text-sm text-destructive">{error}</div>
         ) : empty ? (
           <div className="p-6 text-sm text-muted-foreground">{empty}</div>
         ) : (
-          <div className="p-0">
-            {movies.slice(0, 8).map((m, idx) => (
-              <div key={m.id}>
+          <>
+            <div className="divide-y divide-border">
+              {visible.map((m) => (
                 <ResultRow
+                  key={m.id}
                   movie={m}
                   onClose={onClose}
                   onSaveTerm={() => saveTerm(query)}
                 />
-                {idx !== Math.min(movies.length, 8) - 1 ? (
-                  <div className="px-6 py-2">
-                    <Separator />
-                  </div>
-                ) : null}
-              </div>
-            ))}
+              ))}
+            </div>
 
-            {movies.length > 8 ? (
-              <>
-                <div className="h-px w-full bg-border" />
-                <Link
-                  href={`/searchResults?query=${encodeURIComponent(
-                    query,
-                  )}&page=1`}
-                  onClick={() => {
-                    saveTerm(query);
-                    onClose();
-                  }}
-                  className="block w-full px-6 py-4 text-sm text-muted-foreground hover:bg-muted text-left"
-                >
-                  See all results for "{query}"
-                </Link>
-              </>
+            {hasMore ? (
+              <Link
+                href={`/searchResults?query=${encodeURIComponent(query)}&page=1`}
+                onClick={() => {
+                  saveTerm(query);
+                  onClose?.();
+                }}
+                className="
+                  block w-full
+                  px-6 py-4
+                  text-sm text-muted-foreground
+                  hover:bg-muted
+                  transition
+                "
+              >
+                See all results for &quot;{query}&quot;
+              </Link>
             ) : null}
-          </div>
+          </>
         )}
       </div>
     </div>
@@ -114,9 +105,14 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
       href={`/${movie.id}`}
       onClick={() => {
         onSaveTerm?.();
-        onClose();
+        onClose?.();
       }}
-      className="flex items-center gap-4 px-6 py-4 hover:bg-muted transition"
+      className="
+        flex items-center gap-4
+        px-6 py-4
+        hover:bg-muted
+        transition
+      "
     >
       <div className="shrink-0 overflow-hidden bg-muted rounded-md w-[68px] h-[100px]">
         {poster ? (
@@ -134,16 +130,20 @@ function ResultRow({ movie, onClose, onSaveTerm }) {
         <p className="font-semibold truncate text-base">{title}</p>
 
         <div className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
-          <Star className="w-4 h-4 text-yellow-500" />
+          <Star
+            className="h-4 w-4 text-yellow-500 fill-yellow-500"
+            strokeWidth={0}
+          />
           <span className="text-foreground">{rating}</span>
           <span>/10</span>
         </div>
 
-        <p className="mt-2 text-sm text-muted-foreground">{year}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{year}</p>
       </div>
 
-      <div className="text-sm text-muted-foreground hover:text-foreground whitespace-nowrap">
-        See more →
+      <div className="ml-6 flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
+        <span>See more</span>
+        <ChevronRight className="h-4 w-4" />
       </div>
     </Link>
   );
@@ -157,13 +157,13 @@ function RowSkeleton() {
       <div className="flex-1 flex flex-col">
         <Skeleton className="h-5 w-[60%]" />
 
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-2 flex items-center gap-2">
           <Skeleton className="h-4 w-4 rounded-sm" />
           <Skeleton className="h-4 w-12" />
           <Skeleton className="h-4 w-10" />
         </div>
 
-        <Skeleton className="mt-3 h-4 w-12" />
+        <Skeleton className="mt-2 h-4 w-12" />
       </div>
 
       <Skeleton className="h-4 w-20" />

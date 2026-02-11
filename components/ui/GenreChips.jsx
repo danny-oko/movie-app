@@ -2,7 +2,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import React from "react";
+import { ChevronRight } from "lucide-react";
 
 export default function GenreChips({
   genres = [],
@@ -10,7 +10,7 @@ export default function GenreChips({
   isLoading = true,
   error = null,
   baseHref = "/genres",
-  skeletonCount = 20,
+  skeletonCount,
 }) {
   return (
     <div>
@@ -19,7 +19,7 @@ export default function GenreChips({
       <div className="mt-3 flex flex-wrap gap-2">
         {isLoading
           ? Array.from({ length: skeletonCount }).map((_, i) => (
-              <Skeleton key={i} className="h-7 w-20 rounded-full" />
+              <Skeleton key={i} className="h-7 w-24 rounded-full" />
             ))
           : genres.map((genre) => {
               const active = String(genre.id) === String(activeId);
@@ -36,7 +36,8 @@ export default function GenreChips({
                   ].join(" ")}
                 >
                   {genre.name}
-                  {active && <span className="text-[10px]">×</span>}
+                  <ChevronRight className="h-4 w-4 shrink-0" strokeWidth={3} />
+                  {/* {active && <span className="text-[10px]">×</span>} */}
                 </Link>
               );
             })}

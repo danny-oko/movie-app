@@ -6,6 +6,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
 import Modal from "./Modal";
 import Input from "./search/Input";
+import { moviesService } from "@/lib/services/movies";
 
 import { ChevronDown } from "lucide-react";
 
@@ -18,8 +19,8 @@ const Header = () => {
   useEffect(() => {
     const getGenres = async () => {
       try {
-        const res = await axios.get("/api/tmdb/genres");
-        setGenres(res.data?.genres ?? []);
+        const data = await moviesService.genres();
+        setGenres(data?.genres ?? []);
       } catch (err) {
         console.log(err);
       }
@@ -62,7 +63,9 @@ const Header = () => {
         >
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => {
+              setOpen((v) => !v);
+            }}
             className="
               h-9 min-w-[110px] w-auto
               rounded-md

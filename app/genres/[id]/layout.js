@@ -11,7 +11,7 @@ export default function GenresLayout({ children }) {
   const { id } = useParams();
 
   const [genres, setGenres] = useState([]);
-  const [genresCount, setGenresCount] = useState(8);
+  const [genresCount, setGenresCount] = useState(19);
   const [genreError, setGenreError] = useState(null);
   const [loadingGenres, setLoadingGenres] = useState(true);
 
