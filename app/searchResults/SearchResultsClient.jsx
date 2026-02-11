@@ -58,6 +58,8 @@ export default function SearchResultsClient() {
     const controller = new AbortController();
 
     (async () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
       try {
         setLoadingSearch(true);
         setSearchError(null);

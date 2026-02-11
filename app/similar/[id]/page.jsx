@@ -27,6 +27,8 @@ export default function Page() {
   useEffect(() => {
     if (!id) return;
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     const controller = new AbortController();
 
     (async () => {

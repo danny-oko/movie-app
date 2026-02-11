@@ -24,6 +24,8 @@ export default function TopRatedClient() {
   useEffect(() => {
     let alive = true;
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    
     (async () => {
       try {
         if (!alive) return;

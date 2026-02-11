@@ -12,8 +12,12 @@ export default function Page() {
   const [movies, setMovies] = useState([]);
   const [moviesError, setMoviesError] = useState(null);
   const [loadingMovies, setLoadingMovies] = useState(true);
+
   useEffect(() => {
     if (!id) return;
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     let alive = true;
     (async () => {
       try {
