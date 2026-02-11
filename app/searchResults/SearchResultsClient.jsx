@@ -156,8 +156,8 @@ export default function SearchResultsClient() {
               <div className="mt-4">
                 <MovieGrid
                   movies={searchedMovies}
-                  limit={12}
-                  skeletonCount={12}
+                  limit={15}
+                  skeletonCount={15}
                   isLoading={loadingSearch}
                 />
               </div>
