@@ -41,29 +41,26 @@ export default function Page() {
   }, [id, page]);
   return (
     <>
-      {" "}
       {moviesError && (
         <p className="mt-2 text-sm text-destructive">{moviesError}</p>
-      )}{" "}
+      )}
       <div className="mt-4">
-        {" "}
         <MovieGrid
           movies={movies}
           limit={15}
           skeletonCount={15}
           isLoading={loadingMovies}
-        />{" "}
-      </div>{" "}
+        />
+      </div>
       <div className="mt-8 flex justify-end">
-        {" "}
         <Pager
           page={page}
           totalPages={Math.min(totalPages, 500)}
           onPageChange={setPage}
           maxButtons={3}
           isLoading={loadingMovies}
-        />{" "}
-      </div>{" "}
+        />
+      </div>
     </>
   );
 }
