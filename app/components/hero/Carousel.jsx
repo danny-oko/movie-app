@@ -16,16 +16,16 @@ export default function HeroCarousel({ movies, onWatchTrailer, loading }) {
 
   return (
     <Carousel className="h-full w-full">
-      <CarouselContent className="h-full">
+      <CarouselContent className="h-full -ml-0">
         {movies.map((m) => (
-          <CarouselItem key={m.id} className="h-full">
+          <CarouselItem key={m.id} className="h-full pl-0">
             <Slider movie={m} onWatchTrailer={onWatchTrailer} />
           </CarouselItem>
         ))}
       </CarouselContent>
 
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="left-3 top-1/2 z-30 -translate-y-1/2 border-white/20 bg-black/55 text-white hover:bg-black/70 sm:left-4 md:left-6" />
+      <CarouselNext className="right-3 top-1/2 z-30 -translate-y-1/2 border-white/20 bg-black/55 text-white hover:bg-black/70 sm:right-4 md:right-6" />
     </Carousel>
   );
 }

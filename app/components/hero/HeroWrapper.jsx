@@ -53,16 +53,14 @@ const Hero = () => {
 
   return (
     <section className="w-full">
-      <div className="mx-auto w-[98%] max-w-none px-4 sm:px-6 md:px-8">
-        {error && <p className="text-destructive mb-3">{error}</p>}
+      {error && <p className="text-destructive px-4 pb-3 sm:px-6 md:px-8">{error}</p>}
 
-        <div className="w-full">
-          <HeroCarousel
-            movies={movies}
-            onWatchTrailer={handleWatchTrailer}
-            loading={loading}
-          />
-        </div>
+      <div className="w-full">
+        <HeroCarousel
+          movies={movies}
+          onWatchTrailer={handleWatchTrailer}
+          loading={loading}
+        />
       </div>
 
       <TrailerDialog

@@ -5,8 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function HeroSkeleton() {
   return (
-    <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
-      <Skeleton className="absolute inset-0 rounded-lg" />
+    <div className="relative h-[60vh] w-full overflow-hidden">
+      <Skeleton className="absolute inset-0" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
 
       <div className="absolute left-32 top-1/2 z-10 w-[520px] -translate-y-1/2 max-md:left-6 max-md:w-[85%] space-y-4">

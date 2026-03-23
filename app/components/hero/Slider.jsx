@@ -10,7 +10,7 @@ export default function Slider({ movie, onWatchTrailer }) {
     : null;
 
   return (
-    <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
+    <div className="relative h-[60vh] w-full overflow-hidden">
       {backdrop ? (
         <img
           src={backdrop}
