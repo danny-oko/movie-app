@@ -14,7 +14,12 @@ import { Search } from "lucide-react";
 
 const LS_KEY = "search_term";
 
-export default function Input({ showCount = true, className = "" }) {
+export default function Input({
+  showCount = true,
+  className = "",
+  mobile = false,
+  autoFocus = false,
+}) {
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -131,6 +136,7 @@ export default function Input({ showCount = true, className = "" }) {
           className="min-w-0"
           placeholder="Search"
           type="text"
+          autoFocus={autoFocus}
           value={text}
           onChange={handleChange}
           onFocus={() => {
@@ -151,6 +157,7 @@ export default function Input({ showCount = true, className = "" }) {
 
       {open && (text.trim() || loading) && (
         <SearchDropdown
+          mobile={mobile}
           movies={movies}
           loading={loading}
           empty={empty}

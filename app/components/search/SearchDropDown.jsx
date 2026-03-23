@@ -15,6 +15,7 @@ export default function SearchDropdown({
   error,
   onClose,
   query = "",
+  mobile = false,
 }) {
   const saveTerm = (term) => {
     try {
@@ -28,13 +29,11 @@ export default function SearchDropdown({
 
   return (
     <div
-      className="
-        absolute left-1/2 top-14 z-50
-        -translate-x-1/2
-        w-[min(572px,92vw)]
-        rounded-2xl border border-border bg-card shadow-xl
-        overflow-hidden
-      "
+      className={`absolute z-50 overflow-hidden rounded-2xl border border-border bg-card shadow-xl ${
+        mobile
+          ? "left-0 top-11 w-full translate-x-0"
+          : "left-1/2 top-14 w-[min(572px,92vw)] -translate-x-1/2"
+      }`}
       role="dialog"
       aria-label="Search results"
     >

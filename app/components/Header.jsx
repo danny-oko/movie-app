@@ -7,13 +7,21 @@ import { ModeToggle } from "@/components/ModeToggle";
 import Modal from "./Modal";
 import Input from "./search/Input";
 import { moviesService } from "@/lib/services/movies";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 
 const Header = () => {
   const [genres, setGenres] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("genre");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const wrapperRef = useRef(null);
 
   useEffect(() => {
@@ -83,7 +91,7 @@ const Header = () => {
             </span>
           </button>
 
-          <div className="w-full min-w-0 max-w-[180px] sm:max-w-[260px] md:max-w-[340px] lg:max-w-[380px]">
+          <div className="hidden min-w-0 sm:block sm:w-[260px] md:w-[340px] lg:w-[380px]">
             <Suspense
               fallback={
                 <div
@@ -95,6 +103,24 @@ const Header = () => {
               <Input />
             </Suspense>
           </div>
+
+          <Dialog open={mobileSearchOpen} onOpenChange={setMobileSearchOpen}>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                aria-label="Open search"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-900 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 sm:hidden"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="top-3 left-1/2 w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 rounded-xl p-3 sm:hidden">
+              <DialogHeader className="sr-only">
+                <DialogTitle>Search movies</DialogTitle>
+              </DialogHeader>
+              <Input showCount={false} autoFocus mobile />
+            </DialogContent>
+          </Dialog>
 
           {open && (
             <Modal
