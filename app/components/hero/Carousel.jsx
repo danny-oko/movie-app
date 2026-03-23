@@ -16,7 +16,7 @@ export default function HeroCarousel({ movies, onWatchTrailer, loading }) {
 
   return (
     <Carousel className="h-full w-full">
-      <CarouselContent className="h-full -ml-0">
+      <CarouselContent className="h-full ml-0">
         {movies.map((m) => (
           <CarouselItem key={m.id} className="h-full pl-0">
             <Slider movie={m} onWatchTrailer={onWatchTrailer} />
